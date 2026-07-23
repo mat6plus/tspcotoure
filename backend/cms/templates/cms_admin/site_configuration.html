@@ -1,0 +1,231 @@
+{% extends 'cms_admin/base.html' %}
+{% block title %}Site Configuration{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(145,67,37,0.10),transparent_34%),linear-gradient(135deg,#fbf9f8_0%,#f4eee9_100%)] px-8 py-8">
+  <div class="mb-8 max-w-6xl">
+    <div class="mb-3 flex flex-wrap items-center gap-2">
+      <span class="rounded-full bg-[#fff7f3] px-3 py-1 text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.16em] text-[#914325]">Brand Controls</span>
+      {% if cfg.updated_at %}
+      <span class="rounded-full border border-[#e4e2e1] bg-white/80 px-3 py-1 text-xs font-medium text-[#88726c]">Updated {{ cfg.updated_at|date:'M j, Y \a\t g:i A' }}</span>
+      {% endif %}
+    </div>
+    <h1 class="font-[Playfair_Display] text-4xl font-semibold text-[#1b1c1c]">Site Configuration</h1>
+    <p class="mt-2 max-w-3xl text-sm leading-6 text-[#55433d]">Manage the homepage hero, contact details, social profiles, and footer copy without touching code.</p>
+  </div>
+
+  <div class="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_380px]">
+    <div class="admin-card p-6 lg:p-8">
+      <form method="post" class="space-y-8">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="rounded-xl border border-[#ffdad6] bg-[#fff4f0] px-4 py-3 text-sm text-[#93000a]">
+          {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+        {% endif %}
+
+        <section>
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">auto_awesome</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Homepage hero</h2>
+              <p class="text-xs font-medium text-[#88726c]">Set the first impression visitors see above the fold.</p>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <div>
+              <label for="{{ form.hero_tagline.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Hero Tagline</label>
+              {{ form.hero_tagline }}
+              {% if form.hero_tagline.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.hero_tagline.errors.0 }}</p>{% endif %}
+              <p class="mt-2 text-xs leading-5 text-[#88726c]">Displayed as the main headline on the home page hero.</p>
+            </div>
+            <div>
+              <label for="{{ form.hero_subtext.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Hero Subtext</label>
+              {{ form.hero_subtext }}
+              {% if form.hero_subtext.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.hero_subtext.errors.0 }}</p>{% endif %}
+              <p class="mt-2 text-xs leading-5 text-[#88726c]">Supporting description shown beneath the tagline.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="border-t border-[#e4e2e1] pt-8">
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">contact_mail</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Contact & timings</h2>
+              <p class="text-xs font-medium text-[#88726c]">Keep enquiry and delivery expectations clear.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label for="{{ form.contact_email.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Contact Email</label>
+              {{ form.contact_email }}
+              {% if form.contact_email.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.contact_email.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+              <label for="{{ form.whatsapp_number.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">WhatsApp Number</label>
+              {{ form.whatsapp_number }}
+              {% if form.whatsapp_number.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.whatsapp_number.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+              <label for="{{ form.delivery_lead_time.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Delivery Lead Time</label>
+              {{ form.delivery_lead_time }}
+              {% if form.delivery_lead_time.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.delivery_lead_time.errors.0 }}</p>{% endif %}
+              <p class="mt-2 text-xs leading-5 text-[#88726c]">Example: 4–6 weeks. Shown on the custom-order page.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="border-t border-[#e4e2e1] pt-8">
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">share</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Social profiles</h2>
+              <p class="text-xs font-medium text-[#88726c]">Connect the storefront to TSP Couture’s social presence.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label for="{{ form.instagram_url.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Instagram URL</label>
+              {{ form.instagram_url }}
+              {% if form.instagram_url.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.instagram_url.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+              <label for="{{ form.pinterest_url.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Pinterest URL</label>
+              {{ form.pinterest_url }}
+              {% if form.pinterest_url.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.pinterest_url.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+              <label for="{{ form.facebook_url.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Facebook URL</label>
+              {{ form.facebook_url }}
+              {% if form.facebook_url.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.facebook_url.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+              <label for="{{ form.twitter_url.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Twitter / X URL</label>
+              {{ form.twitter_url }}
+              {% if form.twitter_url.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.twitter_url.errors.0 }}</p>{% endif %}
+            </div>
+          </div>
+        </section>
+
+        <section class="border-t border-[#e4e2e1] pt-8">
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">border_bottom</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Footer content</h2>
+              <p class="text-xs font-medium text-[#88726c]">Studio details and copyright notice shown site-wide.</p>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <div>
+              <label for="{{ form.footer_address.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Studio / Footer Address</label>
+              {{ form.footer_address }}
+              {% if form.footer_address.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.footer_address.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+              <label for="{{ form.footer_copyright.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Custom Footer Copyright</label>
+              {{ form.footer_copyright }}
+              {% if form.footer_copyright.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.footer_copyright.errors.0 }}</p>{% endif %}
+              <p class="mt-2 text-xs leading-5 text-[#88726c]">Leave blank to use the default copyright notice.</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="flex flex-col gap-3 border-t border-[#e4e2e1] pt-8 sm:flex-row sm:items-center">
+          <button type="submit" class="btn-primary inline-flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">save</span>
+            Save Settings
+          </button>
+          <a href="{% url 'cms-admin:dashboard' %}" class="btn-secondary inline-flex items-center justify-center no-underline">Back to Dashboard</a>
+        </div>
+      </form>
+    </div>
+
+    <aside class="space-y-6">
+      <div class="admin-card overflow-hidden">
+        <div class="border-b border-[#e4e2e1] bg-[#f6f3f2] px-6 py-4">
+          <div class="font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.14em] text-[#88726c]">Live Preview</div>
+          <div class="mt-1 text-sm text-[#55433d]">Approximate homepage and footer copy.</div>
+        </div>
+        <div class="p-6">
+          <div class="rounded-2xl bg-[#1b1c1c] p-6 text-white shadow-xl">
+            <div class="font-[Playfair_Display] text-3xl font-semibold leading-tight" id="previewHeroTagline">{{ cfg.hero_tagline|default:'Bespoke luxury tailoring, crafted for your story.' }}</div>
+            <p id="previewHeroSubtext" class="mt-4 text-sm leading-6 text-[#dcd9d9]">{{ cfg.hero_subtext|default:'Refined custom garments designed around your measurements, preferences, and occasion.' }}</p>
+          </div>
+          <div class="mt-6 rounded-2xl bg-[#fbf9f8] p-5 ring-1 ring-[#e4e2e1]">
+            <div class="text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.12em] text-[#88726c]">Contact Snapshot</div>
+            <div class="mt-3 space-y-2 text-sm text-[#55433d]">
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined mt-0.5 text-[16px] text-[#914325]" style="font-variation-settings:'wght'300">mail</span>
+                <span id="previewEmail">{{ cfg.contact_email }}</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined mt-0.5 text-[16px] text-[#914325]" style="font-variation-settings:'wght'300">schedule</span>
+                <span id="previewLeadTime">{{ cfg.delivery_lead_time }}</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined mt-0.5 text-[16px] text-[#914325]" style="font-variation-settings:'wght'300">place</span>
+                <span id="previewAddress">{{ cfg.footer_address|default:'Studio address will appear here.' }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 rounded-2xl bg-[#f6f3f2] p-5 ring-1 ring-[#e4e2e1]">
+            <div class="text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.12em] text-[#88726c]">Footer Copyright</div>
+            <div id="previewCopyright" class="mt-3 text-sm leading-6 text-[#55433d]">{{ cfg.footer_copyright|default:'© TSP Couture. All rights reserved.' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-dashed border-[#dcd9d9] bg-[#fbf9f8] p-5 text-xs leading-6 text-[#88726c]">
+        Changes are saved to the singleton site configuration record and reflected across the public site where these settings are used.
+      </div>
+    </aside>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const previewHeroTagline = document.getElementById('previewHeroTagline');
+  const previewHeroSubtext = document.getElementById('previewHeroSubtext');
+  const previewEmail = document.getElementById('previewEmail');
+  const previewLeadTime = document.getElementById('previewLeadTime');
+  const previewAddress = document.getElementById('previewAddress');
+  const previewCopyright = document.getElementById('previewCopyright');
+
+  const configFields = {
+    hero_tagline: document.getElementById('{{ form.hero_tagline.id_for_label }}'),
+    hero_subtext: document.getElementById('{{ form.hero_subtext.id_for_label }}'),
+    contact_email: document.getElementById('{{ form.contact_email.id_for_label }}'),
+    delivery_lead_time: document.getElementById('{{ form.delivery_lead_time.id_for_label }}'),
+    footer_address: document.getElementById('{{ form.footer_address.id_for_label }}'),
+    footer_copyright: document.getElementById('{{ form.footer_copyright.id_for_label }}'),
+  };
+
+  function updateConfigPreview() {
+    previewHeroTagline.textContent = configFields.hero_tagline.value.trim() || 'Bespoke luxury tailoring, crafted for your story.';
+    previewHeroSubtext.textContent = configFields.hero_subtext.value.trim() || 'Refined custom garments designed around your measurements, preferences, and occasion.';
+    previewEmail.textContent = configFields.contact_email.value.trim() || 'hello@tspcouture.com';
+    previewLeadTime.textContent = configFields.delivery_lead_time.value.trim() || '4–6 weeks';
+    previewAddress.textContent = configFields.footer_address.value.trim() || 'Studio address will appear here.';
+    previewCopyright.textContent = configFields.footer_copyright.value.trim() || '© TSP Couture. All rights reserved.';
+  }
+
+  Object.values(configFields).forEach(input => input.addEventListener('input', updateConfigPreview));
+  updateConfigPreview();
+</script>
+{% endblock %}

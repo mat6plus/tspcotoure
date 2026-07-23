@@ -1,0 +1,204 @@
+{% extends 'cms_admin/base.html' %}
+{% block title %}{% if is_edit %}Edit {{ garment.title }}{% else %}New Garment{% endif %}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(145,67,37,0.10),transparent_34%),linear-gradient(135deg,#fbf9f8_0%,#f4eee9_100%)] px-8 py-8">
+  <div class="mb-8 max-w-5xl">
+    <a href="{% url 'cms-admin:garment_list' %}" class="btn-ghost mb-4 flex w-fit items-center gap-1 px-0 text-sm no-underline">
+      <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">arrow_back</span>
+      Back to Garments
+    </a>
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div>
+        <h1 class="font-[Playfair_Display] text-4xl font-semibold text-[#1b1c1c]">{% if is_edit %}Edit Garment{% else %}New Garment{% endif %}</h1>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-[#55433d]">
+          {% if is_edit %}Update the catalog entry, presentation details, and publication status.{% else %}Create a new wardrobe catalog entry for the TSP Couture gallery.{% endif %}
+        </p>
+      </div>
+      <div class="inline-flex items-center gap-2 rounded-full bg-[#fff4f0] px-4 py-2 text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.14em] text-[#914325]">
+        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">style</span>
+        {% if is_edit %}Edit mode{% else %}Create mode{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+    <div class="card p-6 lg:p-8">
+      <form method="post" enctype="multipart/form-data" class="space-y-8">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="rounded-xl border border-[#ffdad6] bg-[#fff4f0] px-4 py-3 text-sm text-[#93000a]">
+          {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+        {% endif %}
+
+        <section>
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">info</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Garment details</h2>
+              <p class="text-xs font-medium text-[#88726c]">Name and descriptive copy used for gallery cards and captions.</p>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <div>
+              <label for="{{ form.title.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Title</label>
+              {{ form.title }}
+              {% if form.title.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.title.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div>
+              <label for="{{ form.description.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Description</label>
+              {{ form.description }}
+              {% if form.description.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.description.errors.0 }}</p>{% endif %}
+            </div>
+          </div>
+        </section>
+
+        <section class="border-t border-[#e4e2e1] pt-8">
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">category</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Collection placement</h2>
+              <p class="text-xs font-medium text-[#88726c]">Control where the garment sits within the catalog.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label for="{{ form.category.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Category</label>
+              {{ form.category }}
+              {% if form.category.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.category.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div>
+              <label for="{{ form.sort_order.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Sort order</label>
+              {{ form.sort_order }}
+              {% if form.sort_order.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.sort_order.errors.0 }}</p>{% endif %}
+              <p class="mt-2 text-xs leading-5 text-[#88726c]">Lower numbers appear earlier in the collection.</p>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <label for="{{ form.image.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Image</label>
+            {{ form.image }}
+            {% if form.image.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.image.errors.0 }}</p>{% endif %}
+            <p class="mt-2 text-xs leading-5 text-[#88726c]">Upload a high-resolution garment image for the gallery preview.</p>
+          </div>
+        </section>
+
+        <section class="border-t border-[#e4e2e1] pt-8">
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">visibility</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Visibility</h2>
+              <p class="text-xs font-medium text-[#88726c]">Choose whether the garment is live and whether it is highlighted.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-[#e4e2e1] bg-[#f6f3f2] p-4 transition hover:border-[#914325]/50">
+              {{ form.is_published }}
+              <span class="mt-0.5">
+                <span class="block text-sm font-medium text-[#1b1c1c]">Published</span>
+                <span class="mt-1 block text-xs leading-5 text-[#88726c]">Visible on the public garment gallery.</span>
+              </span>
+            </label>
+
+            <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-[#e4e2e1] bg-[#f6f3f2] p-4 transition hover:border-[#914325]/50">
+              {{ form.is_featured }}
+              <span class="mt-0.5">
+                <span class="block text-sm font-medium text-[#1b1c1c]">Featured</span>
+                <span class="mt-1 block text-xs leading-5 text-[#88726c]">Highlighted in featured wardrobe areas.</span>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <div class="flex flex-col gap-3 border-t border-[#e4e2e1] pt-8 sm:flex-row sm:items-center">
+          <button type="submit" class="btn-primary inline-flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">{% if is_edit %}save{% else %}add_circle{% endif %}</span>
+            {% if is_edit %}Save Changes{% else %}Create Garment{% endif %}
+          </button>
+          <a href="{% url 'cms-admin:garment_list' %}" class="btn-secondary inline-flex items-center justify-center no-underline">Cancel</a>
+        </div>
+      </form>
+    </div>
+
+    <aside class="space-y-6">
+      <div class="card overflow-hidden">
+        <div class="border-b border-[#e4e2e1] bg-[#f6f3f2] px-6 py-4">
+          <div class="font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.14em] text-[#88726c]">Preview</div>
+        </div>
+        <div class="p-6">
+          <div id="image-preview" class="mb-5 overflow-hidden rounded-xl bg-[#f6f3f2] ring-1 ring-[#e4e2e1]">
+            <div class="aspect-[4/3] flex items-center justify-center text-[#88726c]">
+              {% if is_edit and garment.image %}
+              <img src="{{ garment.image.url }}" alt="{{ garment.title }}" class="h-full w-full object-cover">
+              {% else %}
+              <div class="text-center">
+                <span class="material-symbols-outlined mx-auto mb-2 text-[34px]" style="font-variation-settings:'wght'300">image</span>
+                <div class="text-xs font-medium">Image preview will appear here</div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="space-y-4 text-sm">
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined mt-0.5 text-[18px] text-[#88726c]" style="font-variation-settings:'wght'300">checkroom</span>
+              <p class="leading-6 text-[#55433d]">Use a clear, well-lit garment image that reflects the final presentation on the public gallery.</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined mt-0.5 text-[18px] text-[#88726c]" style="font-variation-settings:'wght'300">sort</span>
+              <p class="leading-6 text-[#55433d]">Sort order controls catalog order; lower numbers display first when categories are grouped.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl bg-[#1b1c1c] p-6 text-white shadow-lg">
+        <div class="mb-4 flex items-center gap-2 text-[#fbf9f8]">
+          <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">lightbulb</span>
+          <span class="font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.14em]">Atelier note</span>
+        </div>
+        <p class="text-sm leading-6 text-[#dcd9d9]">
+          Keep titles concise and descriptions gallery-ready. The same copy is used for public-facing presentation, so avoid internal shorthand.
+        </p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+  const preview = document.getElementById('image-preview');
+
+  if (imageInput && preview) {
+    imageInput.addEventListener('change', function () {
+      const file = this.files && this.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const previewInner = preview.querySelector('.aspect-\\[4\\/3\\]');
+        if (!previewInner) return;
+
+        previewInner.innerHTML = '<img src="' + event.target.result + '" alt="Selected garment preview" class="h-full w-full object-cover">';
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+</script>
+{% endblock %}

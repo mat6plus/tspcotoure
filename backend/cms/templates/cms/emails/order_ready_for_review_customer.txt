@@ -1,0 +1,22 @@
+TSP Couture — Your Garment is Ready for Review
+════════════════════════════════════════════════
+
+Dear {{ request.name }},
+
+Your custom garment has reached an important milestone — it is now ready for final review. We would love for you to inspect the piece and confirm that everything meets your expectations.
+
+Order Status: Ready for Review
+Garment: {{ request.garment_type|default:"Custom Design" }}
+
+──────────────────────────────────────────────
+
+Next Steps
+
+1. Please contact us at {{ request.phone }} to schedule your review appointment.
+2. Bring any reference images or notes you would like us to consider.
+3. Any small adjustments requested at review will be completed before final delivery.
+
+Thank you for choosing TSP Couture.
+
+— The TSP Couture Atelier Team
+New York · London · Lagos

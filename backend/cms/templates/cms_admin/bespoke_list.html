@@ -1,0 +1,263 @@
+{% extends 'cms_admin/base.html' %}
+{% block title %}Bespoke Requests{% endblock %}
+
+{% block extra_head %}
+<style>
+  .bespoke-page {
+    position: relative;
+    min-height: calc(100vh - 76px);
+    background:
+      radial-gradient(circle at 12% 0%, rgba(145, 67, 37, 0.12), transparent 28rem),
+      radial-gradient(circle at 88% 8%, rgba(79, 94, 129, 0.08), transparent 30rem),
+      linear-gradient(180deg, rgba(255,255,255,0.54), rgba(246,243,242,0.58));
+  }
+  .bespoke-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(136, 114, 108, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(136, 114, 108, 0.06) 1px, transparent 1px);
+    background-size: 46px 46px;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.36), transparent 70%);
+  }
+  .bespoke-page > div { position: relative; z-index: 1; }
+  .filter-card { transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease; }
+  .filter-card:hover { transform: translateY(-2px); border-color: rgba(145,67,37,0.22); background: #fff; box-shadow: 0 16px 38px rgba(139,90,74,0.10); }
+  .filter-card.is-active { border-color: rgba(145,67,37,0.32); background: #fff7f3; box-shadow: inset 0 0 0 1px rgba(145,67,37,0.08); }
+  .request-row { transition: background-color 160ms ease; }
+  .request-row:hover { background: rgba(255,247,243,0.72); box-shadow: inset 3px 0 0 var(--rom-terracotta); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bespoke-page -m-8 px-8 py-8 lg:-m-8 lg:px-8">
+  <div class="mx-auto max-w-[1480px]">
+    <div class="mb-8 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+      <div class="reveal max-w-3xl">
+        <div class="mb-4 flex flex-wrap items-center gap-2">
+          <span class="rounded-full bg-[#fff7f3] px-3 py-1.5 text-xs font-[Space_Grotesk] font-bold uppercase tracking-[0.16em] text-[#914325] ring-1 ring-[#e4e2e1]">Atelier Intake</span>
+          <span class="rounded-full bg-white/82 px-3 py-1.5 text-xs font-medium text-[#88726c] ring-1 ring-[#e4e2e1]">{{ total_count }} request{{ total_count|pluralize }} received</span>
+        </div>
+        <h1 class="font-[Playfair_Display] text-4xl font-semibold leading-tight text-[#1b1c1c] sm:text-5xl">Bespoke Requests</h1>
+        <p class="mt-4 max-w-2xl text-base leading-7 text-[#55433d]">
+          {% if cms_can_view_full_client_pii %}Review, filter, and open every custom-order enquiry captured from the TSP Couture frontend.{% else %}Review and update only the custom-order enquiries assigned to your atelier queue.{% endif %}
+        </p>
+      </div>
+      <a href="{% url 'cms-admin:dashboard' %}" class="btn-ghost shrink-0">
+        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">dashboard</span>
+        Dashboard
+      </a>
+    </div>
+
+    <div class="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <a href="{% url 'cms-admin:bespoke_list' %}" class="filter-card {% if not current_status %}is-active{% endif %} admin-card p-5 no-underline">
+        <div class="flex items-center justify-between">
+          <span class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.12em] text-[#88726c]">All</span>
+          <span class="material-symbols-outlined text-[18px] text-[#88726c]" style="font-variation-settings:'wght'300">inbox</span>
+        </div>
+        <div class="mt-4 font-[Playfair_Display] text-4xl font-semibold text-[#1b1c1c]">{{ total_count }}</div>
+        <div class="mt-1 text-xs font-medium text-[#55433d]">Total enquiries</div>
+      </a>
+
+      {% for code, info in status_counts.items %}
+      <a href="{% url 'cms-admin:bespoke_list' %}?status={{ code }}" class="filter-card {% if current_status == code %}is-active{% endif %} admin-card p-5 no-underline">
+        <div class="flex items-center justify-between">
+          <span class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.12em] text-[#88726c]">{{ info.label }}</span>
+          <span class="h-2.5 w-2.5 rounded-full {% if code == 'new' %}bg-[#ba1a1a]{% elif code == 'in_progress' %}bg-[#4f5e81]{% elif code == 'completed' %}bg-[#059669]{% else %}bg-[#88726c]{% endif %}"></span>
+        </div>
+        <div class="mt-4 font-[Playfair_Display] text-4xl font-semibold text-[#1b1c1c]">{{ info.count }}</div>
+        <div class="mt-1 text-xs font-medium text-[#55433d]">Pipeline stage</div>
+      </a>
+      {% endfor %}
+    </div>
+
+    <section class="admin-card overflow-hidden">
+      <div class="border-b border-[#e4e2e1] bg-white/70 p-5">
+        <form method="get" class="flex flex-col gap-3 lg:flex-row lg:items-center">
+          <div class="relative flex-1">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#88726c]" style="font-variation-settings:'wght'300">search</span>
+            <input type="text" name="q" value="{{ search_query }}" placeholder="{% if cms_can_view_full_client_pii %}Search by client, email, phone, or garment type...{% else %}Search by client, garment type, fabrics, or notes...{% endif %}" class="w-full rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] py-3 pl-12 pr-4 text-sm text-[#1b1c1c] placeholder-[#88726c] transition focus:border-[#914325] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#914325]/10">
+          </div>
+          {% if current_status %}
+          <input type="hidden" name="status" value="{{ current_status }}">
+          {% endif %}
+          {% if per_page %}
+          <input type="hidden" name="per_page" value="{{ per_page }}">
+          {% endif %}
+          <button type="submit" class="btn-primary">Search</button>
+          {% if search_query or current_status %}
+          <a href="?{% if current_status %}status={{ current_status }}&{% endif %}{% if search_query %}q={{ search_query|urlencode }}&{% endif %}{% if per_page %}per_page={{ per_page }}{% endif %}" class="btn-ghost">Clear</a>
+          {% endif %}
+        </form>
+      </div>
+
+      {% if requests %}
+      <div class="overflow-x-auto" style="scrollbar-gutter: stable">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Contact</th>
+              <th>Bespoke Brief</th>
+              <th>Pipeline</th>
+              <th>Received</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for req in requests %}
+            <tr class="request-row">
+              <td>
+                <div class="flex items-center gap-3">
+                  <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#fff7f3] font-[Playfair_Display] text-lg font-bold text-[#914325] ring-1 ring-[#e4e2e1]">
+                    {{ req.name|make_list|first|upper }}
+                  </div>
+                  <div class="min-w-0">
+                    <div class="truncate font-bold text-[#1b1c1c]">{{ req.name }}</div>
+                    <div class="mt-0.5 text-xs text-[#88726c]">Request #{{ req.pk }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                {% if cms_can_view_full_client_pii %}
+                <div class="min-w-[170px] text-sm text-[#55433d]">{{ req.email }}</div>
+                <div class="mt-1 text-xs text-[#88726c]">{{ req.phone|default:'Phone not provided' }}</div>
+                {% else %}
+                <div class="min-w-[170px] text-sm text-[#55433d]">{{ req.email|default:'No email' }}</div>
+                <div class="mt-1 text-xs text-[#88726c]">{{ req.phone|default:'Phone not provided' }}</div>
+                {% endif %}
+              </td>
+              <td>
+                <div class="min-w-[240px]">
+                  <div class="font-bold text-[#1b1c1c]">{{ req.garment_type|default:'Custom Design' }}</div>
+                  {% if req.fabrics %}
+                  <div class="mt-2 flex flex-wrap gap-1.5">
+                    <span class="rounded-full bg-[#f0eded] px-2.5 py-1 text-[10px] font-[Space_Grotesk] font-bold uppercase tracking-[0.08em] text-[#55433d]">{{ req.fabrics|truncatechars:42 }}</span>
+                  </div>
+                  {% else %}
+                  <div class="mt-2 text-xs text-[#88726c]">Awaiting fabric preference</div>
+                  {% endif %}
+                </div>
+              </td>
+              <td>
+                <span class="status-badge status-{{ req.status }}">{{ req.get_status_display }}</span>
+                <div class="mt-2 text-xs text-[#88726c]">
+                  {% if req.status == 'new' %}New intake
+                  {% elif req.status == 'in_progress' %}Atelier review
+                  {% elif req.status == 'completed' %}Closed successfully
+                  {% else %}Not active{% endif %}
+                </div>
+              </td>
+              <td>
+                <div class="text-sm font-medium text-[#1b1c1c]">{{ req.created_at|date:'M j, Y' }}</div>
+                <div class="mt-1 text-xs text-[#88726c]">{{ req.created_at|date:'g:i A' }}</div>
+              </td>
+              <td class="text-right">
+                <a href="{% url 'cms-admin:bespoke_detail' req.pk %}" class="btn-ghost inline-flex justify-end text-sm">
+                  Open
+                  <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">arrow_forward</span>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if requests.has_other_pages %}
+      <div class="flex flex-col gap-4 border-t border-[#e4e2e1] bg-[#fbf9f8] p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-[#55433d]">
+          <div class="flex items-center gap-2">
+            <span>Show</span>
+            <select onchange="changePerPage(this)" class="rounded-xl border border-[#e4e2e1] bg-white px-2 py-1.5 text-xs font-bold text-[#1b1c1c] focus:border-[#914325] focus:outline-none focus:ring-4 focus:ring-[#914325]/10">
+              <option value="5" {% if per_page == '5' %}selected{% endif %}>5</option>
+              <option value="10" {% if per_page == '10' or not per_page %}selected{% endif %}>10</option>
+              <option value="25" {% if per_page == '25' %}selected{% endif %}>25</option>
+              <option value="50" {% if per_page == '50' %}selected{% endif %}>50</option>
+            </select>
+            <span>entries</span>
+          </div>
+          <span class="text-[#88726c]">Showing {{ requests.start_index }} to {{ requests.end_index }} of {{ requests.paginator.count }} entries</span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          {% if requests.has_previous %}
+          <a href="?{% if current_status %}status={{ current_status }}&{% endif %}{% if search_query %}q={{ search_query|urlencode }}&{% endif %}{% if per_page %}per_page={{ per_page }}&{% endif %}page={{ requests.previous_page_number }}" class="pagination-link">
+            <span class="material-symbols-outlined text-[14px]">chevron_left</span>
+          </a>
+          {% else %}
+          <span class="pagination-disabled">
+            <span class="material-symbols-outlined text-[14px]">chevron_left</span>
+          </span>
+          {% endif %}
+
+          {% for num in requests.paginator.page_range %}
+            {% if requests.number == num %}
+              <span class="pagination-current">{{ num }}</span>
+            {% elif num > requests.number|add:'-3' and num < requests.number|add:'3' %}
+              <a href="?{% if current_status %}status={{ current_status }}&{% endif %}{% if search_query %}q={{ search_query|urlencode }}&{% endif %}{% if per_page %}per_page={{ per_page }}&{% endif %}page={{ num }}" class="pagination-link">{{ num }}</a>
+            {% endif %}
+          {% endfor %}
+
+          {% if requests.has_next %}
+          <a href="?{% if current_status %}status={{ current_status }}&{% endif %}{% if search_query %}q={{ search_query|urlencode }}&{% endif %}{% if per_page %}per_page={{ per_page }}&{% endif %}page={{ requests.next_page_number }}" class="pagination-link">
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          </a>
+          {% else %}
+          <span class="pagination-disabled">
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          </span>
+          {% endif %}
+        </div>
+      </div>
+      {% elif requests %}
+      <div class="flex flex-col gap-4 border-t border-[#e4e2e1] bg-[#fbf9f8] p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-[#55433d]">
+          <div class="flex items-center gap-2">
+            <span>Show</span>
+            <select onchange="changePerPage(this)" class="rounded-xl border border-[#e4e2e1] bg-white px-2 py-1.5 text-xs font-bold text-[#1b1c1c] focus:border-[#914325] focus:outline-none focus:ring-4 focus:ring-[#914325]/10">
+              <option value="5" {% if per_page == '5' %}selected{% endif %}>5</option>
+              <option value="10" {% if per_page == '10' or not per_page %}selected{% endif %}>10</option>
+              <option value="25" {% if per_page == '25' %}selected{% endif %}>25</option>
+              <option value="50" {% if per_page == '50' %}selected{% endif %}>50</option>
+            </select>
+            <span>entries</span>
+          </div>
+          <span class="text-[#88726c]">Showing all {{ requests.paginator.count }} entries</span>
+        </div>
+      </div>
+      {% endif %}
+      {% else %}
+      <div class="px-6 py-16 text-center text-[#88726c]">
+        <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#fff7f3] text-[#914325] ring-1 ring-[#e4e2e1]">
+          <span class="material-symbols-outlined text-[34px]" style="font-variation-settings:'wght'300">inbox</span>
+        </div>
+        <p class="text-sm font-bold text-[#1b1c1c]">No bespoke requests found</p>
+        {% if search_query or current_status %}
+        <p class="mt-1 text-xs">Try adjusting your search or pipeline filter.</p>
+        <a href="?{% if current_status %}status={{ current_status }}{% if per_page %}&per_page={{ per_page }}{% endif %}{% else %}{% if per_page %}per_page={{ per_page }}{% endif %}{% endif %}" class="btn-ghost mt-4 inline-flex">
+          Clear filters
+          <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">filter_alt_off</span>
+        </a>
+        {% else %}
+        <p class="mt-1 text-xs">The frontend custom-order form is connected; enquiries will appear here after submission.</p>
+        {% endif %}
+      </div>
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  function changePerPage(select) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('per_page', select.value);
+    url.searchParams.set('page', '1');
+    window.location.href = url.pathname + url.search;
+  }
+</script>
+{% endblock %}

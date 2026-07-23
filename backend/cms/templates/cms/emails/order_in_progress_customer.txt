@@ -1,0 +1,22 @@
+TSP Couture — Your Order is Now In Progress
+══════════════════════════════════════════════
+
+Dear {{ request.name }},
+
+Great news — our atelier team has commenced work on your custom garment. Your design is now being brought to life by our skilled tailors.
+
+Order Status: In Progress
+Garment: {{ request.garment_type|default:"Custom Design" }}
+
+──────────────────────────────────────────────
+
+What Happens Next
+
+1. You will receive another update when your garment reaches the review stage.
+2. If we need any additional details, we will reach out using the contact information you provided.
+3. Estimated timeline: {{ site_config.delivery_lead_time|default:"4–6 weeks" }}.
+
+Thank you for choosing TSP Couture.
+
+— The TSP Couture Atelier Team
+New York · London · Lagos

@@ -1,0 +1,278 @@
+{% extends 'cms_admin/base.html' %}
+{% block title %}Garment Collection{% endblock %}
+
+{% block extra_head %}
+<style>
+  .metric-ring { position: relative; display: grid; place-items: center; }
+  .metric-ring::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 999px;
+    background: var(--ring-color, rgba(145,67,37,0.10));
+    filter: blur(10px);
+    opacity: 0.68;
+  }
+  .metric-ring > span { position: relative; }
+  .garment-summary-card { transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+  .garment-summary-card:hover { transform: translateY(-3px); border-color: rgba(145,67,37,0.24); box-shadow: 0 24px 58px rgba(139,90,74,0.12); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(145,67,37,0.10),transparent_34%),linear-gradient(135deg,#fbf9f8_0%,#f4eee9_100%)] px-8 py-8">
+  <div class="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+    <div>
+      <div class="mb-3 flex items-center gap-2 text-[11px] font-[Space_Grotesk] font-semibold uppercase tracking-[0.16em] text-[#88726c]">
+        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">checkroom</span>
+        Atelier wardrobe
+      </div>
+      <h1 class="font-[Playfair_Display] text-4xl font-semibold text-[#1b1c1c]">Garment Collection</h1>
+      <p class="mt-2 max-w-2xl text-sm leading-6 text-[#55433d]">
+        Manage the TSP Couture wardrobe catalog used across the gallery, homepage highlights, and custom-order references.
+      </p>
+    </div>
+
+    {% if cms_can_manage_cms_content %}
+    <a href="{% url 'cms-admin:garment_create' %}" class="btn-primary inline-flex w-fit items-center gap-2 no-underline">
+      <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">add</span>
+      Add Garment
+    </a>
+    {% endif %}
+  </div>
+
+  <div class="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="admin-card garment-summary-card p-5">
+      <div class="flex items-start justify-between gap-5">
+        <div>
+          <div class="font-[Space_Grotesk] text-xs font-bold tracking-[0.15em] text-[#88726c] uppercase">Total Garments</div>
+          <div class="mt-4 font-[Playfair_Display] text-4xl font-semibold text-[#1b1c1c]">{{ total_garments }}</div>
+          <div class="mt-2 text-xs font-medium text-[#55433d]">Complete wardrobe catalog</div>
+        </div>
+        <div class="metric-ring h-14 w-14 rounded-full bg-[#fff4f0]" style="--ring-color: rgba(145,67,37,0.14)">
+          <span class="material-symbols-outlined text-[25px] text-[#914325]" style="font-variation-settings:'wght'300">checkroom</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-card garment-summary-card p-5">
+      <div class="flex items-start justify-between gap-5">
+        <div>
+          <div class="font-[Space_Grotesk] text-xs font-bold tracking-[0.15em] text-[#88726c] uppercase">Published</div>
+          <div class="mt-4 font-[Playfair_Display] text-4xl font-semibold text-[#065f46]">{{ published_garments }}</div>
+          <div class="mt-2 text-xs font-medium text-[#55433d]">Visible on storefront</div>
+        </div>
+        <div class="metric-ring h-14 w-14 rounded-full bg-[#d1fae5]" style="--ring-color: rgba(5,150,105,0.14)">
+          <span class="material-symbols-outlined text-[25px] text-[#065f46]" style="font-variation-settings:'wght'300">visibility</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-card garment-summary-card p-5">
+      <div class="flex items-start justify-between gap-5">
+        <div>
+          <div class="font-[Space_Grotesk] text-xs font-bold tracking-[0.15em] text-[#88726c] uppercase">Drafts</div>
+          <div class="mt-4 font-[Playfair_Display] text-4xl font-semibold text-[#55433d]">{{ draft_garments }}</div>
+          <div class="mt-2 text-xs font-medium text-[#55433d]">Awaiting publication</div>
+        </div>
+        <div class="metric-ring h-14 w-14 rounded-full bg-[#f0eded]" style="--ring-color: rgba(136,114,108,0.14)">
+          <span class="material-symbols-outlined text-[25px] text-[#55433d]" style="font-variation-settings:'wght'300">draft</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-card garment-summary-card p-5">
+      <div class="flex items-start justify-between gap-5">
+        <div>
+          <div class="font-[Space_Grotesk] text-xs font-bold tracking-[0.15em] text-[#88726c] uppercase">Featured</div>
+          <div class="mt-4 font-[Playfair_Display] text-4xl font-semibold text-[#966b00]">{{ featured_garments }}</div>
+          <div class="mt-2 text-xs font-medium text-[#55433d]">Highlighted collection</div>
+        </div>
+        <div class="metric-ring h-14 w-14 rounded-full bg-[#fff7ed]" style="--ring-color: rgba(150,107,0,0.14)">
+          <span class="material-symbols-outlined text-[25px] text-[#966b00]" style="font-variation-settings:'wght'300">star</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-card overflow-hidden">
+    {% if garments %}
+    <div class="overflow-x-auto" style="scrollbar-gutter: stable">
+      <table class="admin-table">
+        <thead>
+          <tr class="border-b border-[#e4e2e1] bg-[#f6f3f2]">
+            <th class="px-6 py-4 text-left font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#88726c]">Garment</th>
+            <th class="px-6 py-4 text-left font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#88726c]">Category</th>
+            <th class="px-6 py-4 text-left font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#88726c]">Status</th>
+            <th class="px-6 py-4 text-left font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#88726c]">Order</th>
+            <th class="px-6 py-4 text-left font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#88726c]">Updated</th>
+            <th class="px-6 py-4 text-right font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#88726c]">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for garment in garments %}
+          <tr class="group border-b border-[#f0eded] transition-colors hover:bg-[#fffaf7] last:border-b-0">
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-4">
+                {% if garment.image %}
+                <img src="{{ garment.image.url }}" alt="{{ garment.title }}" class="h-14 w-14 rounded-xl object-cover bg-[#f0eded] shadow-sm ring-1 ring-[#e4e2e1]">
+                {% else %}
+                <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-[#f6f3f2] ring-1 ring-[#e4e2e1]">
+                  <span class="material-symbols-outlined text-[22px] text-[#88726c]" style="font-variation-settings:'wght'300">image</span>
+                </div>
+                {% endif %}
+                <div class="min-w-0">
+                  <div class="truncate text-base font-medium text-[#1b1c1c]">{{ garment.title }}</div>
+                  <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#88726c]">
+                    <span class="truncate">{{ garment.description|default:"No description" }}</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center rounded-full bg-[#f6f3f2] px-3 py-1 text-xs font-semibold text-[#55433d] ring-1 ring-[#e4e2e1]">
+                {{ garment.get_category_display }}
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex flex-col items-start gap-2">
+                {% if garment.is_published %}
+                <span class="status-badge status-completed">
+                  Published
+                </span>
+                {% else %}
+                <span class="status-badge status-draft">
+                  Draft
+                </span>
+                {% endif %}
+                {% if garment.is_featured %}
+                <span class="inline-flex items-center gap-1 text-[10px] font-[Space_Grotesk] font-semibold uppercase tracking-[0.12em] text-[#966b00]">
+                  <span class="material-symbols-outlined text-[13px]" style="font-variation-settings:'wght'300">star</span>
+                  Featured
+                </span>
+                {% endif %}
+              </div>
+            </td>
+            <td class="px-6 py-4 text-[#55433d]">{{ garment.sort_order }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-[#88726c]">{{ garment.updated_at|date:'M j, Y' }}</td>
+            <td class="px-6 py-4">
+              <div class="flex items-center justify-end gap-2">
+                {% if cms_can_manage_cms_content %}
+                <a href="{% url 'cms-admin:garment_edit' garment.pk %}" class="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-[#55433d] no-underline transition-colors hover:bg-[#f6f3f2]">
+                  <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">edit</span>
+                  Edit
+                </a>
+                {% endif %}
+                {% if cms_can_delete_cms_content %}
+                <form method="post" action="{% url 'cms-admin:garment_delete' garment.pk %}" onsubmit="return confirm('Permanently delete \u00ab{{ garment.title|escapejs }}\u00bb?')" class="inline">
+                  {% csrf_token %}
+                  <button type="submit" class="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-[#ba1a1a] transition-colors hover:bg-[#ffdad6]">
+                    <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">delete</span>
+                    Delete
+                  </button>
+                </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if garments.has_other_pages %}
+    <div class="border-t border-[#e4e2e1] bg-[#f6f3f2] px-6 py-4">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-[#55433d]">
+          <div class="flex items-center gap-2">
+            <span>Show</span>
+            <select onchange="changePerPage(this)" class="rounded-lg border border-[#e4e2e1] bg-white px-3 py-2 text-xs font-semibold text-[#1b1c1c] focus:border-[#914325]">
+              <option value="5" {% if per_page == '5' %}selected{% endif %}>5</option>
+              <option value="10" {% if per_page == '10' or not per_page %}selected{% endif %}>10</option>
+              <option value="25" {% if per_page == '25' %}selected{% endif %}>25</option>
+              <option value="50" {% if per_page == '50' %}selected{% endif %}>50</option>
+            </select>
+            <span>entries</span>
+          </div>
+          <span class="text-[#88726c]">Showing {{ garments.start_index }} to {{ garments.end_index }} of {{ garments.paginator.count }} garments</span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          {% if garments.has_previous %}
+          <a href="?per_page={{ per_page }}&page={{ garments.previous_page_number }}" class="inline-flex items-center gap-0.5 rounded-lg border border-[#e4e2e1] bg-white px-3 py-2 text-xs font-semibold text-[#55433d] no-underline transition-colors hover:bg-[#fffaf7]">
+            <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'wght'300">chevron_left</span>Prev
+          </a>
+          {% else %}
+          <span class="inline-flex cursor-not-allowed items-center gap-0.5 rounded-lg border border-[#e4e2e1] bg-white/60 px-3 py-2 text-xs font-semibold text-gray-400">
+            <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'wght'300">chevron_left</span>Prev
+          </span>
+          {% endif %}
+
+          {% for num in garments.paginator.page_range %}
+          {% if garments.number == num %}
+          <span class="rounded-lg bg-[#914325] px-3 py-2 text-xs font-bold text-white">{{ num }}</span>
+          {% elif num > garments.number|add:'-3' and num < garments.number|add:'3' %}
+          <a href="?per_page={{ per_page }}&page={{ num }}" class="rounded-lg border border-[#e4e2e1] bg-white px-3 py-2 text-xs font-semibold text-[#55433d] no-underline transition-colors hover:bg-[#fffaf7]">{{ num }}</a>
+          {% endif %}
+          {% endfor %}
+
+          {% if garments.has_next %}
+          <a href="?per_page={{ per_page }}&page={{ garments.next_page_number }}" class="inline-flex items-center gap-0.5 rounded-lg border border-[#e4e2e1] bg-white px-3 py-2 text-xs font-semibold text-[#55433d] no-underline transition-colors hover:bg-[#fffaf7]">
+            Next<span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'wght'300">chevron_right</span>
+          </a>
+          {% else %}
+          <span class="inline-flex cursor-not-allowed items-center gap-0.5 rounded-lg border border-[#e4e2e1] bg-white/60 px-3 py-2 text-xs font-semibold text-gray-400">
+            Next<span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'wght'300">chevron_right</span>
+          </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% elif garments %}
+    <div class="border-t border-[#e4e2e1] bg-[#f6f3f2] px-6 py-4">
+      <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-[#55433d]">
+        <div class="flex items-center gap-2">
+          <span>Show</span>
+          <select onchange="changePerPage(this)" class="rounded-lg border border-[#e4e2e1] bg-white px-3 py-2 text-xs font-semibold text-[#1b1c1c] focus:border-[#914325]">
+            <option value="5" {% if per_page == '5' %}selected{% endif %}>5</option>
+            <option value="10" {% if per_page == '10' or not per_page %}selected{% endif %}>10</option>
+            <option value="25" {% if per_page == '25' %}selected{% endif %}>25</option>
+            <option value="50" {% if per_page == '50' %}selected{% endif %}>50</option>
+          </select>
+          <span>entries</span>
+        </div>
+        <span class="text-[#88726c]">Showing all {{ garments.paginator.count }} garments</span>
+      </div>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="py-16 text-center">
+      <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+        <span class="material-symbols-outlined text-[30px]" style="font-variation-settings:'wght'300">checkroom</span>
+      </div>
+      <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">No garments yet</h2>
+      <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-[#55433d]">
+        Add the first piece to begin building the TSP Couture garment catalog.
+      </p>
+      {% if cms_can_manage_cms_content %}
+      <a href="{% url 'cms-admin:garment_create' %}" class="btn-primary mt-6 inline-flex items-center gap-2 no-underline">
+        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">add</span>
+        Add Your First Garment
+      </a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% block extra_scripts %}
+<script>
+  function changePerPage(select) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('per_page', select.value);
+    url.searchParams.set('page', '1');
+    window.location.href = url.pathname + url.search;
+  }
+</script>
+{% endblock %}
+{% endblock %}

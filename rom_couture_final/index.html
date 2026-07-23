@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TSP Couture | Bespoke Heritage Tailoring</title>
+    <meta name="description" content="TSP Couture creates made-to-measure heritage garments with digital precision, hand-finished tailoring, curated fabrics, and global delivery."/>
+    <meta property="og:title" content="TSP Couture | Bespoke Heritage Tailoring"/>
+    <meta property="og:description" content="Digital precision meets hand-finished heritage tailoring for garments made entirely for you."/>
+    <meta property="og:type" content="website"/>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://lh3.googleusercontent.com http://localhost:8000 http://127.0.0.1:8000 data: blob:; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000;"/>
+    <link rel="icon" href="assets/miniROM-nBG.png"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin/>
+    <meta name="color-scheme" content="light"/>
+    <script>document.documentElement.classList.add('js');window.addEventListener('error', function () { document.documentElement.classList.add('js-failed'); }, true);</script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="tailwind-config.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=optional" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,0,0&display=optional" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body class="bg-surface text-on-surface">
+    <nav></nav>
+
+    <main id="main-content" tabindex="-1">
+        <section class="hero-shell">
+            <div class="container hero-grid">
+                <div class="hero-copy">
+                    <span class="kicker" data-animate>Heritage Atelier</span>
+                    <h1 id="hero-tagline" class="display display-xl" data-animate data-delay="0.06">Bespoke Couture,<br/><span class="italic font-normal text-primary">Digitally Fitted</span></h1>
+                    <p id="hero-subtext" class="lead mt-6" data-animate data-delay="0.14">TSP Couture transforms Ankara, Kente, Silk Bazin, and hand-woven heritage fabrics into made-to-measure garments guided by digital precision and finished by hand.</p>
+                    <div class="hero-actions" data-animate data-delay="0.22">
+                        <a class="btn btn-primary magnetic" href="gallery.html"><span class="material-symbols-outlined">auto_awesome</span>Explore the Gallery</a>
+                        <a class="btn btn-ghost magnetic" href="custom-order.html"><span class="material-symbols-outlined">design_services</span>Request Your Design</a>
+                    </div>
+                    <div class="hero-meta" data-animate data-delay="0.30">
+                        <span class="meta-pill"><span class="material-symbols-outlined text-base">straighten</span>3D measurement guide</span>
+                        <span class="meta-pill"><span class="material-symbols-outlined text-base">payments</span>Zero online payments</span>
+                        <span class="meta-pill"><span class="material-symbols-outlined text-base">local_shipping</span>Global delivery</span>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <canvas id="thread-canvas" class="thread-canvas" aria-hidden="true"></canvas>
+                    <div class="hero-frame" data-parallax="0.045">
+                        <img alt="Sophisticated fashion model wearing a meticulously tailored Ankara print blazer with warm tones in a minimalist showroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHcVMqEutW0iuP3QIMwpPv15oxU5mPPSZVzuaVEZlBfefTsrI33loOQwYlIYE7Wphs0qoSGmayC-MkZS0vLWVWG2n7RWd5ifsvZEueZ79nizuerCoFiq9oaH7rSsRXnpPKMS67txfVhAMGtKXoyqCXEcn4ODGMjMy08UdZY5GV_Q70rjNHq_fK5MTBmKWU1fcAgxjw3mNf8RShsIpP7v7PuZs1rAEwopJV36g987rMmgxgNMamAMzUSuIwaFvhbUhYfKkpC3s8dBw" fetchpriority="high"/>
+                    </div>
+                    <div class="hero-floating-card hero-card-top" data-parallax="-0.035">
+                        <strong>4-6</strong>
+                        <span>Weeks in atelier</span>
+                    </div>
+                    <div class="hero-floating-card hero-card-bottom" data-parallax="-0.025">
+                        <strong>120+</strong>
+                        <span>Countries delivered</span>
+                    </div>
+                </div>
+            </div>
+            <a class="scroll-cue" href="#atelier-highlights" aria-label="Scroll to atelier highlights">
+                <span class="scroll-cue-text">Scroll</span>
+                <span class="scroll-cue-arrow" aria-hidden="true"><span class="material-symbols-outlined">keyboard_double_arrow_down</span></span>
+            </a>
+        </section>
+
+        <div id="atelier-highlights" class="marquee" data-marquee aria-label="TSP Couture highlights">
+            <div class="marquee-track" aria-hidden="true">
+                <div class="marquee-group">
+                    <span><b>Heritage fabrics</b></span><span>Hand-cut patterns</span><span>Digital fitting</span><span>Global shipping</span><span>No online payments</span><span><b>One-of-one garments</b></span>
+                </div>
+                <div class="marquee-group">
+                    <span><b>Heritage fabrics</b></span><span>Hand-cut patterns</span><span>Digital fitting</span><span>Global shipping</span><span>No online payments</span><span><b>One-of-one garments</b></span>
+                </div>
+            </div>
+        </div>
+
+        <section class="section container" data-flow-section>
+            <div class="mb-12 grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-end">
+                <div data-animate>
+                    <span class="kicker">The Atelier Difference</span>
+                    <h2 class="display display-md">Craft with the calm confidence of precision.</h2>
+                </div>
+                <p class="lead mb-0" data-animate data-delay="0.08">A contemporary tailoring experience designed around trust: transparent process, secure offline settlement, and a garment that belongs only to you.</p>
+            </div>
+            <div class="feature-grid">
+                <article class="feature-card flow-card" data-animate data-delay="0.04">
+                    <span class="feature-icon material-symbols-outlined text-2xl">payments</span>
+                    <h3 class="mt-8 mb-3">Zero Online Payments</h3>
+                    <p>Reserve your design consultation without entering card details. Settlement is confirmed off-site after your fitting is validated.</p>
+                </article>
+                <article class="feature-card flow-card" data-animate data-delay="0.12">
+                    <span class="feature-icon material-symbols-outlined text-2xl">straighten</span>
+                    <h3 class="mt-8 mb-3">True Custom Fit</h3>
+                    <p>Our guided measurement system captures your proportions so every dart, shoulder, and hem is built around your body.</p>
+                </article>
+                <article class="feature-card flow-card" data-animate data-delay="0.20">
+                    <span class="feature-icon material-symbols-outlined text-2xl">public</span>
+                    <h3 class="mt-8 mb-3">Delivered Worldwide</h3>
+                    <p>From our atelier to your door, finished pieces travel in signature keepsake packaging with insured global shipping.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section container" data-flow-section>
+            <div class="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+                <div data-animate>
+                    <span class="kicker">The Art of the Stitch</span>
+                    <h2 class="display display-lg">Texture, rhythm, and silhouette in motion.</h2>
+                </div>
+                <a class="btn btn-ghost magnetic shrink-0 whitespace-nowrap" href="gallery.html">View Full Archive</a>
+            </div>
+            <div class="masonry-grid" role="list" aria-label="Craftsmanship gallery">
+                <div class="masonry-item flow-card" data-animate>
+                    <div class="card">
+                        <div class="card-media aspect-[3/4]"><img class="cursor-zoom-in" alt="Master tailor pinning vibrant Ankara fabric onto a dress mannequin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVViqrddf597aGW_EEjGpfysybJTAA0act6mRIIYFUYd4uoIbYPSW182w33MNF9YIPUBp8d2EC_vYsYmLQ4oGweKZarl1ubQsKSsDOA_Hdk9z9TWfkZq73NCNy4rdD2YARPSBl3x4kWdkQHD2dElSi3Oho_HmQgUmdIXjyKlNkkMa-qoBax0Wv4YpeBMsL_0kp5UoAiuIqo6fKHAOw-SKOEKeB40gHyXyMGrysROd3sKrxgGN9ymdcLEDHRHbiKH0UR9wCrdrqNfs"/></div>
+                        <div class="card-body"><h3>Pattern Mapping</h3><p>Draping begins with structure before the first cut.</p></div>
+                    </div>
+                </div>
+                <div class="masonry-item flow-card" data-animate>
+                    <div class="card">
+                        <div class="card-media aspect-square"><img class="cursor-zoom-in" alt="Macro shot of shimmering gold thread embroidery on deep burgundy silk fabric" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5ivk9zr6e6vbp0dtEY9qefOi4iE9UUhAcYQTaIewshaDsaRmF8mlLz5GLDmN5NhEEG21I0ZiDPpdlCqoY-hmAP5uEs9PIyX8GXAX6rfH3EyHAJucTJjnx_I5fGICeb4_UvAl-WmN6sfO94tQwabRPBqDyALObj5hiW6-elTVk6Ul3x_5yhpHaN7L9y5lAz-PGa6MVLZEiEgBefapFy-n0m3vl3FiHTgJaseE5jr5qbCQelIZhCPpk_yJj23vlOBjkkMHJOCABBV8"/></div>
+                        <div class="card-body"><h3>Hand Embroidery</h3><p>Details are placed where light can find them.</p></div>
+                    </div>
+                </div>
+                <div class="masonry-item flow-card" data-animate>
+                    <div class="card">
+                        <div class="card-media aspect-[4/5]"><img class="cursor-zoom-in" alt="A bespoke kente cloth vest hanging gracefully on a wooden hanger" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhMMhd8HZjG6R0mPYMuy-jS6kSnqVFEyejqN3EQ6IWMdf2IqEF_xQb4Z3-qMoOvRhk0DSu8i5fGaQLI7UvMbkBxi3i9djVQFGg1PEBKtOnmyVbNBJavQcK9oWfPvrvpOljpGn15M2uTWfhwwTPHbT9cBLf3DvulvlXXYTwBYE1tS9BJG_OSvQmdX014mccW28A48T_7Wqs7q5Faj7I3rO5KrzjPDBoU78lSy7WUHIYwNVjPbl9bQSbgq7ORSN0dyOt9FPGSkiqYHQ"/></div>
+                        <div class="card-body"><h3>Cultural Cloth</h3><p>Heritage textiles retain their story through modern cuts.</p></div>
+                    </div>
+                </div>
+                <div class="masonry-item flow-card" data-animate>
+                    <div class="card">
+                        <div class="card-media aspect-[3/4]"><img class="cursor-zoom-in" alt="Arrangement of rich wool, linen, and patterned Ankara fabric swatches with tailors shears" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcuCwjXsMP5YSJ5nRUFZfXH8zJUqJ53vBAnnXFV8xGunc6YnFj6C_GiXFCv_J_P6M4tI1XPHoDKXYqdijlpKuwC-V8iTiz8jNiK90mpn1_aP1Jak9dlG5r4wwpVzxORcTxX-7_kNGRTz6g53Ggt19DJbxGRQqVMqPXQA7wT_n-wxTtnC1NwI_MsKbYrwrRhkPL_rg7oN_IBsopwJgGtcSIVj--Vh68L-qlKfSqmmkfqdA12P4rpQYn5klIBBIrwsjzp5B3iL_SQN4"/></div>
+                        <div class="card-body"><h3>Fabric Curation</h3><p>Swatches are chosen for drape, weight, and occasion.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section container" data-flow-section>
+            <div class="process-layout">
+                <div class="process-rail flow-card" data-animate role="tablist" aria-label="TSP Couture process steps">
+                    <button class="process-step is-active" type="button" role="tab" aria-selected="true">
+                        <span class="process-number">Phase 01</span>
+                        <h3 class="mt-3 mb-2">Digital Consultation</h3>
+                        <p>Share your vision, occasion, silhouette direction, and fabric references.</p>
+                    </button>
+                    <button class="process-step" type="button" role="tab" aria-selected="false">
+                        <span class="process-number">Phase 02</span>
+                        <h3 class="mt-3 mb-2">Precision Sizing</h3>
+                        <p>Use the guided measurement flow to create a precise digital fit brief.</p>
+                    </button>
+                    <button class="process-step" type="button" role="tab" aria-selected="false">
+                        <span class="process-number">Phase 03</span>
+                        <h3 class="mt-3 mb-2">Handmade Production</h3>
+                        <p>Artisans cut, stitch, press, and quality-check every detail by hand.</p>
+                    </button>
+                </div>
+                <div class="process-visual flow-card" data-animate data-delay="0.12">
+                    <div class="image-frame" data-process-panel>
+                        <img class="cursor-zoom-in" alt="A focused tailor workspace with a partially constructed garment in warm terracotta colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9F4_MWZdH0k-At8j_WQlrK9qwKy2vjnAql0BTfpU4RjwfetyxGl3TUh4mzy6cVcl9MuMqY6gNtEqeFxJAfDxx_equHVU9Is_D2bTuRXX7sh7Y7EFzO02wHNYMDmrH7s0bvtqPtlhiIrmtYEHRFWabK6HZbpCUoXlz7Vk0RZsBdh80pCYTLg_40AOXxDmM96D6uhIi7vB5xB4JVSSOEja8nEKwqQCTpAXlmIyWrd4eyHbx2pwvH4XDeDUtV_yDVlsol-2Kjz4jIJ0"/>
+                    </div>
+                    <div class="image-frame hidden" data-process-panel aria-hidden="true">
+                        <img class="cursor-zoom-in" alt="Designer hand sketching a contemporary African fashion design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7ZsLbDgbjEOyNqatrgCl8gBsrgU9FmDNeWX9o76Aty85AGLapGTL1OxB10jG1914nWYfhHSJE4TLWEZ5khOJaiH5Q4OGf-lY2fbwfgSHUZfaXbOVKplFQlZeCscCc-_Pb1e4zO9PuvveOFV-dcQeqUNzsnEIv0p2G0WLuZItY09C2JIo_Qv2GRgfSi3cTSJA1jPwTFz6BebngSTCyF4MoWr3Wkk0r3YSslMb6zbvsxMDWRVpskd7qtY1lTcfKdMaaRvudjVzGAww"/>
+                    </div>
+                    <div class="image-frame hidden" data-process-panel aria-hidden="true">
+                        <img class="cursor-zoom-in" alt="Finished TSP Couture Ankara blazer on a mannequin in a warm studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC61h1qsWIYJ7wmuu2NzG7-4hlwLL1H9A-z5ghON92UAXlx_SgMfIlxShvdZKQ6V0fG_vIlk8VUtufmLhfP-NaXD6pU4GEwNsKHRaf389zPVBsf7xasBtoS5rdy638nA3mzRycnsJ_rmiP3tWqScqTFmqPPFGjOLeMIw2XZG3BcCR0WcIs6Jiip3LiDwuT4tWR-AnQfwez0zznGbC5slDzI8MMfNdKGR4YVAX1UeewOwk5lFkOs9j62oKVvYBGVkpHH69TYQl3k4DQ"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section container" data-flow-section>
+            <div id="testimonial-carousel" class="quote-card flow-card" data-animate role="region" aria-label="Client testimonials">
+                <p data-slide>“The fit is absolutely impeccable. I've never had a garment feel so personal. The Ankara patterns are vibrant and the construction is high-end.”</p>
+                <cite data-slide>Adrienne K. · New York</cite>
+                <p class="hidden" data-slide>“TSP Couture bridged the gap between my heritage and daily style. The 3D measurement process was incredibly accurate. A masterpiece.”</p>
+                <cite class="hidden" data-slide>Marcus O. · Paris</cite>
+                <p class="hidden" data-slide>“The tactile feel of the fabrics is beyond description. Truly premium digital tailoring. It fits like a second skin.”</p>
+                <cite class="hidden" data-slide>Chioma N. · Lagos</cite>
+            </div>
+            <div id="carousel-dots" class="mt-8 flex justify-center gap-3" role="tablist" aria-label="Testimonial navigation">
+                <button class="testimonial-dot is-active" type="button" role="tab" aria-label="View testimonial 1" aria-selected="true"></button>
+                <button class="testimonial-dot" type="button" role="tab" aria-label="View testimonial 2" aria-selected="false"></button>
+                <button class="testimonial-dot" type="button" role="tab" aria-label="View testimonial 3" aria-selected="false"></button>
+            </div>
+        </section>
+
+        <section class="section-compact container" data-flow-section>
+            <div class="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+                <div data-animate>
+                    <span class="kicker">Cultural Canvas</span>
+                    <h2 class="display display-md">A living archive of modern heritage.</h2>
+                </div>
+                <a class="btn btn-ghost magnetic" href="gallery.html">Open the lookbook</a>
+            </div>
+            <div class="instagram-grid">
+                <div class="image-frame flow-card" data-animate><img class="cursor-zoom-in" alt="Stylish woman walking on a sunlit city street wearing a tailored modern Ankara trench coat" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8Qwr1Mi9mWJ6ifKL8ttWLGuxOnl6Sl56SDqkm6qacTGQxTFb05glLmLsTM9H_tFsSljiZcdH6kMja9A36hb4Z8WnI--lgs4gFyEPWOkZm_2AFHfzFK-V5W5hyDS8ry3yPCwdv3H3y18vCmS2qB2i6ZhXeeLoAQyrfI3xiIi6udiJgLwJlwLEnGhiDt7sMhkPJjSic9Fh07yhh1aYAFJ_h7dZjGcDQPSZ7_SJ3qRu48vOBXSlsdOnSjcigPN-zlSVs13aJk1_zoNI"/></div>
+                <div class="image-frame flow-card" data-animate><img class="cursor-zoom-in" alt="Man in customized modern Ankara print vest standing inside an art gallery" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC61h1qsWIYJ7wmuu2NzG7-4hlwLL1H9A-z5ghON92UAXlx_SgMfIlxShvdZKQ6V0fG_vIlk8VUtufmLhfP-NaXD6pU4GEwNsKHRaf389zPVBsf7xasBtoS5rdy638nA3mzRycnsJ_rmiP3tWqScqTFmqPPFGjOLeMIw2XZG3BcCR0WcIs6Jiip3LiDwuT4tWR-AnQfwez0zznGbC5slDzI8MMfNdKGR4YVAX1UeewOwk5lFkOs9j62oKVvYBGVkpHH69TYQl3k4DQ"/></div>
+                <div class="image-frame flow-card" data-animate><img class="cursor-zoom-in" alt="Macro shot of TSP Couture brand label stitched neatly onto a dark wool garment fabric" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDo68lb4AudgZPUcmDyC0oaL6z2jSySvuHqgG9EjmCtLfZUmZJOrhmCLS91rXjxadpDyfWFuTVY285-z0TpOt_KeNb4ZXrIKrqFdZg1Xn5gtk2rYy4Z8gxAO45luTfnr8bJ2yzMappHwsAbxorOFPEczR-yXZpWtok3qb6IDsvD9soGY_14mWP0F4G9GtqpwAUSeIbUE3Fm--UI86AyAZfUe-6j51Ulbi2kykvZ5fJJdCDUOjWM4cWKdXBCo-I2sV6GH9w-Sr2E0uM"/></div>
+                <div class="image-frame flow-card" data-animate><img class="cursor-zoom-in" alt="Creative designer desk space displaying scattered thread spools, fabric shears, and design sketches" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDITasVCYIcnKZAJFWz1dTfVJeumIwNRHffMRE6FgKMqgkAX1WCUCpyr1506Q2WXrKPD1leZ4m1QkvPCbuahcM2JSnnjKxzqN8BpPWk9orTbC6e-uTwpTB4Cn5fuJZNxTIAUvu7H3-Pz_woq3_VCyFM-Q_CCzMhcOkTJSstEXd0HVCHLp0_YBOffQQ58MBeSBrLOSsHaMGJfLbD8Bbxgqxt8V7rlUrWpOGGwSE_74PJXPNMdlYKceuczEn31FwLCRYCcIhXqL1RK4Q"/></div>
+                <div class="image-frame flow-card" data-animate><img class="cursor-zoom-in" alt="Client opening a beautifully wrapped TSP Couture package with elegant terracotta ribbons" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-gjuXHq-_gN5bF6oXJ1d6hRlf_A9yD6oSN0eI6a5B7aWz_yPzw-3pp5ktgTHXwUuaKkf-ZBiQiDx9VSzBfN9inql-9pIGWUyFfvgDrIdl9XJsVZ1fmPRwUn3R4YW1cKSZva21Wpa_xx8SA1iuiAubrmG91zQH6V8-MSEwUGK9ZhLNWkj3UJdIPldxNBvhT1mvb8wKBQLYG-lLoKwAn8DtRa5Omz1pdaL_rWfg6XWDDHCZIzJZNVTfWyWiMjuJD_XJxSxDp0qEbNI"/></div>
+                <div class="image-frame flow-card" data-animate><img class="cursor-zoom-in" alt="Close-up fashion photo of perfectly styled and tailored Ankara trousers with a crisp white shirt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCR-pkgT5DZ2X3ULKwT4n1wxyJUhJ7bsnqIB7gz-Eqg0p7RFzmuyBhs6Whu8p_6MID_bXEbVjuMlF08da1rjlcgVb-8LGaXY8g1AZrL7om-HcMA1C_N3QsdbcmdMkeT1hgQiWOMgptL9m5GxQ-IUtVDUwk3nci9yfEsmlIrnaRrf5FXUvsmfeO8VCt0A-r8WrVclP6895sqT7AF6VZemu2JRaqMBJ08xtISgNvhRexpX1VUjjVun1b9Q9o3gqEk2ql_-qkPW3QF2Zs"/></div>
+            </div>
+        </section>
+
+        <section class="section container" data-flow-section>
+            <div class="cta-panel flow-card" data-animate>
+                <span class="kicker">Begin Your Piece</span>
+                <h2 class="display display-lg mb-6">Your garment should feel inevitable.</h2>
+                <p class="lead mb-8">Start with a conversation. We will translate your references, measurements, and fabric instincts into a custom design brief for the atelier.</p>
+                <a class="btn btn-outline magnetic" href="custom-order.html"><span class="material-symbols-outlined">design_services</span>Start Custom Order</a>
+            </div>
+        </section>
+    </main>
+
+    <footer></footer>
+
+    <script src="security.js"></script>
+    <script src="shared.js"></script>
+</body>
+</html>

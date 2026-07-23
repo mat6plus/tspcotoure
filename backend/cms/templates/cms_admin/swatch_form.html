@@ -1,0 +1,232 @@
+{% extends 'cms_admin/base.html' %}
+{% block title %}{% if is_edit %}Edit {{ swatch.name }}{% else %}New Fabric Swatch{% endif %}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(145,67,37,0.10),transparent_34%),linear-gradient(135deg,#fbf9f8_0%,#f4eee9_100%)] px-8 py-8">
+  <div class="mb-8 max-w-5xl">
+    <a href="{% url 'cms-admin:swatch_list' %}" class="btn-ghost mb-4 flex w-fit items-center gap-1 px-0 text-sm no-underline">
+      <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">arrow_back</span>
+      Back to Fabric Swatches
+    </a>
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div>
+        <div class="mb-3 flex flex-wrap items-center gap-2">
+          <span class="rounded-full bg-[#fff7f3] px-3 py-1 text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.16em] text-[#914325]">Custom Order Step 4</span>
+          <span class="rounded-full border border-[#e4e2e1] bg-white/80 px-3 py-1 text-xs font-medium text-[#88726c]">Fabric Selection</span>
+        </div>
+        <h1 class="font-[Playfair_Display] text-4xl font-semibold text-[#1b1c1c]">{% if is_edit %}Edit Fabric Swatch{% else %}New Fabric Swatch{% endif %}</h1>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-[#55433d]">Define the fabric name, base colour, optional texture, and publication state customers see when choosing materials.</p>
+      </div>
+      <div class="inline-flex items-center gap-2 rounded-full bg-[#fff4f0] px-4 py-2 text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.14em] text-[#914325]">
+        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">palette</span>
+        Swatch Editor
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+    <div class="card p-6 lg:p-8">
+      <form method="post" enctype="multipart/form-data" class="space-y-8">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        <div class="rounded-xl border border-[#ffdad6] bg-[#fff4f0] px-4 py-3 text-sm text-[#93000a]">
+          {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+        {% endif %}
+
+        <section>
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">info</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Fabric identity</h2>
+              <p class="text-xs font-medium text-[#88726c]">Name the fabric and choose its base colour.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label for="{{ form.name.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Fabric Name *</label>
+              {{ form.name }}
+              {% if form.name.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.name.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+              <label for="{{ form.color_hex.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Base Colour</label>
+              {{ form.color_hex }}
+              {% if form.color_hex.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.color_hex.errors.0 }}</p>{% endif %}
+              <div class="mt-3 flex items-center gap-2">
+                <span id="swatchColorChip" class="h-10 w-10 rounded-xl border border-[#e4e2e1]" style="background:{{ swatch.color_hex|default:'#e0d6c8' }};"></span>
+                <span id="swatchColorValue" class="text-xs font-mono text-[#88726c]">{{ swatch.color_hex|default:'#e0d6c8' }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="border-t border-[#e4e2e1] pt-8">
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">texture</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Texture overlay</h2>
+              <p class="text-xs font-medium text-[#88726c]">Optional advanced styling for fabric-like visual depth.</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="{{ form.texture_css.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Texture Overlay CSS <span class="text-[#88726c] normal-case font-normal">(optional)</span></label>
+            {{ form.texture_css }}
+            {% if form.texture_css.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.texture_css.errors.0 }}</p>{% endif %}
+            <p class="mt-2 text-xs leading-5 text-[#88726c]">Example: <code class="rounded bg-[#f0eded] px-1">background-image:repeating-linear-gradient(45deg,transparent,transparent 2px,#000 2px,#000 4px);opacity:0.2;</code></p>
+          </div>
+        </section>
+
+        <section class="border-t border-[#e4e2e1] pt-8">
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">image</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Fabric photo</h2>
+              <p class="text-xs font-medium text-[#88726c]">Optional image override for a more realistic swatch preview.</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="{{ form.image.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Fabric Photo <span class="text-[#88726c] normal-case font-normal">(optional)</span></label>
+            {{ form.image }}
+            {% if form.image.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.image.errors.0 }}</p>{% endif %}
+            <div class="mt-3 flex items-center gap-3">
+              <img id="swatchPreviewImage" src="{% if is_edit and swatch.image %}{{ swatch.image.url }}{% endif %}" alt="Fabric swatch preview" class="h-16 w-16 rounded-xl object-cover bg-[#f0eded] ring-1 ring-[#e4e2e1] {% if not is_edit or not swatch.image %}hidden{% endif %}">
+              <div id="swatchPreviewSwatch" class="h-16 w-16 rounded-xl ring-1 ring-[#e4e2e1] {% if is_edit and swatch.image %}hidden{% endif %}" style="background:{{ swatch.color_hex|default:'#e0d6c8' }};"></div>
+              <span class="text-xs leading-5 text-[#88726c]">Upload a new file to replace the current photo.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="border-t border-[#e4e2e1] pt-8">
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">visibility</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Display control</h2>
+              <p class="text-xs font-medium text-[#88726c]">Set order and visibility for the customer-facing selector.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label for="{{ form.sort_order.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Sort Order</label>
+              {{ form.sort_order }}
+              {% if form.sort_order.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.sort_order.errors.0 }}</p>{% endif %}
+              <p class="mt-2 text-xs leading-5 text-[#88726c]">Lower numbers appear first.</p>
+            </div>
+
+            <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-[#e4e2e1] bg-[#f6f3f2] p-4 transition hover:border-[#914325]/50">
+              {{ form.is_published }}
+              <span class="mt-0.5">
+                <span class="block text-sm font-medium text-[#1b1c1c]">Published</span>
+                <span class="mt-1 block text-xs leading-5 text-[#88726c]">Visible to customers in the order form.</span>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <div class="flex flex-col gap-3 border-t border-[#e4e2e1] pt-8 sm:flex-row sm:items-center">
+          <button type="submit" class="btn-primary inline-flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">{% if is_edit %}save{% else %}add_circle{% endif %}</span>
+            {% if is_edit %}Save Changes{% else %}Create Swatch{% endif %}
+          </button>
+          <a href="{% url 'cms-admin:swatch_list' %}" class="btn-secondary inline-flex items-center justify-center no-underline">Cancel</a>
+        </div>
+      </form>
+    </div>
+
+    <aside class="space-y-6">
+      <div class="card overflow-hidden">
+        <div class="border-b border-[#e4e2e1] bg-[#f6f3f2] px-6 py-4">
+          <div class="font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.14em] text-[#88726c]">Live Swatch</div>
+          <div class="mt-1 text-sm text-[#55433d]">Preview as a customer-facing option.</div>
+        </div>
+        <div class="p-6">
+          <div id="swatchPreviewCard" class="rounded-2xl bg-[#fbf9f8] p-5 ring-1 ring-[#e4e2e1]">
+            <div id="swatchPreviewSurface" class="flex h-40 items-center justify-center overflow-hidden rounded-2xl bg-[#fff7f3]">
+              <img id="swatchPreviewCardImage" src="{% if is_edit and swatch.image %}{{ swatch.image.url }}{% endif %}" alt="Preview image" class="h-full w-full object-cover {% if not is_edit or not swatch.image %}hidden{% endif %}">
+              <div id="swatchPreviewCardSwatch" class="h-24 w-24 rounded-2xl ring-1 ring-[#e4e2e1] {% if is_edit and swatch.image %}hidden{% endif %}" style="background:{{ swatch.color_hex|default:'#e0d6c8' }};"></div>
+            </div>
+            <div id="swatchPreviewName" class="mt-5 font-[Playfair_Display] text-3xl font-semibold leading-tight text-[#1b1c1c]">Fabric Name</div>
+            <div id="swatchPreviewStatus" class="mt-2 inline-flex items-center gap-1 rounded-full bg-[#d1fae5] px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#065f46]">
+              <span class="h-1.5 w-1.5 rounded-full bg-[#065f46]"></span>Published
+            </div>
+          </div>
+          <div class="mt-4 rounded-xl border border-dashed border-[#dcd9d9] bg-[#fbf9f8] p-4 text-xs leading-5 text-[#88726c]">
+            Use clear fabric names customers understand. If a photo is uploaded, it will override the colour swatch in this preview.
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const swatchNameInput = document.getElementById('{{ form.name.id_for_label }}');
+  const swatchColorInput = document.getElementById('{{ form.color_hex.id_for_label }}');
+  const swatchTextureInput = document.getElementById('{{ form.texture_css.id_for_label }}');
+  const swatchImageInput = document.getElementById('{{ form.image.id_for_label }}');
+  const swatchIsPublishedInput = document.getElementById('{{ form.is_published.id_for_label }}');
+  const swatchColorChip = document.getElementById('swatchColorChip');
+  const swatchColorValue = document.getElementById('swatchColorValue');
+  const swatchPreviewImage = document.getElementById('swatchPreviewImage');
+  const swatchPreviewSwatch = document.getElementById('swatchPreviewSwatch');
+  const swatchPreviewCardImage = document.getElementById('swatchPreviewCardImage');
+  const swatchPreviewCardSwatch = document.getElementById('swatchPreviewCardSwatch');
+  const swatchPreviewName = document.getElementById('swatchPreviewName');
+  const swatchPreviewStatus = document.getElementById('swatchPreviewStatus');
+
+  function applySwatchStyle(element) {
+    const color = swatchColorInput.value || '#e0d6c8';
+    const texture = swatchTextureInput.value || '';
+    element.style.background = color;
+    if (texture) {
+      element.style.cssText += texture;
+    }
+  }
+
+  function updateSwatchPreview() {
+    const name = swatchNameInput.value.trim() || 'Fabric Name';
+    const color = swatchColorInput.value || '#e0d6c8';
+    swatchColorChip.style.background = color;
+    swatchColorValue.textContent = color;
+    swatchPreviewName.textContent = name;
+    swatchPreviewStatus.innerHTML = swatchIsPublishedInput.checked
+      ? '<span class="h-1.5 w-1.5 rounded-full bg-[#065f46]"></span>Published'
+      : '<span class="h-1.5 w-1.5 rounded-full bg-[#88726c]"></span>Hidden';
+
+    applySwatchStyle(swatchPreviewSwatch);
+    applySwatchStyle(swatchPreviewCardSwatch);
+
+    const file = swatchImageInput.files && swatchImageInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        swatchPreviewImage.src = reader.result;
+        swatchPreviewImage.classList.remove('hidden');
+        swatchPreviewSwatch.classList.add('hidden');
+        swatchPreviewCardImage.src = reader.result;
+        swatchPreviewCardImage.classList.remove('hidden');
+        swatchPreviewCardSwatch.classList.add('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  [swatchNameInput, swatchColorInput, swatchTextureInput, swatchImageInput, swatchIsPublishedInput].forEach(input => input.addEventListener('input', updateSwatchPreview));
+  swatchIsPublishedInput.addEventListener('change', updateSwatchPreview);
+  updateSwatchPreview();
+</script>
+{% endblock %}

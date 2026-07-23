@@ -1,0 +1,18 @@
+TSP Couture — Your Bespoke Order is Ready
+══════════════════════════════════════════
+
+Dear {{ request.name }},
+
+Your custom garment is ready! Our atelier team has completed work on your order.
+
+Garment: {{ request.garment_type|default:"Custom Design" }}
+
+Your next steps:
+1. We will contact you at {{ request.phone }} to arrange delivery or pickup.
+2. Your garment will arrive in our signature keepsake box.
+3. If any final adjustments are needed, we will arrange a fitting session.
+
+Thank you for choosing TSP Couture.
+
+— The TSP Couture Atelier Team
+New York · London · Lagos

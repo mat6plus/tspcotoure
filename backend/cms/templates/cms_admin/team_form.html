@@ -1,0 +1,54 @@
+{% extends 'cms_admin/base.html' %}
+{% block title %}{% if is_edit %}Edit CMS User{% else %}Add CMS User{% endif %}{% endblock %}
+
+{% block content %}
+<div class="reveal max-w-3xl">
+  <a href="{% url 'cms-admin:team_list' %}" class="btn-ghost mb-5 px-0">
+    <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">arrow_back</span>
+    Back to Team
+  </a>
+
+  <div class="admin-card p-6">
+    <div class="mb-6">
+      <div class="mb-3 inline-flex items-center gap-2 rounded-full border border-[#e4e2e1] bg-white/78 px-3 py-1.5 text-xs font-[Space_Grotesk] font-bold tracking-[0.16em] text-[#914325]">
+        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">badge</span>
+        ACCESS CONTROL
+      </div>
+      <h1 class="font-[Playfair_Display] text-4xl font-semibold text-[#1b1c1c]">{% if is_edit %}Edit CMS User{% else %}Add CMS User{% endif %}</h1>
+      <p class="mt-3 text-sm leading-6 text-[#55433d]">
+        Assign one CMS role using Django groups. Superusers are protected and must be managed through Django authentication controls.
+      </p>
+    </div>
+
+    <form method="post" class="space-y-5" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+      <div class="rounded-2xl border border-[#f5c6c6] bg-[#ffdad6]/70 p-4 text-sm font-medium text-[#93000a]">
+        {{ form.non_field_errors.0 }}
+      </div>
+      {% endif %}
+
+      {% for field in form %}
+      <div>
+        <label for="{{ field.id_for_label }}" class="admin-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}
+        <p class="mt-1 text-xs text-[#88726c]">{{ field.help_text }}</p>
+        {% endif %}
+        {% if field.errors %}
+        <p class="mt-1 text-xs text-[#ba1a1a]">{{ field.errors.0 }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <div class="flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-end">
+        <a href="{% url 'cms-admin:team_list' %}" class="btn-ghost">Cancel</a>
+        <button type="submit" class="btn-primary">
+          <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">save</span>
+          {% if is_edit %}Save User{% else %}Create User{% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

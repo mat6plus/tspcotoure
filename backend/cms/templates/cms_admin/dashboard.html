@@ -1,0 +1,432 @@
+{% extends 'cms_admin/base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_head %}
+<style>
+  .dashboard-metric-card {
+    position: relative;
+    min-height: 154px;
+    overflow: hidden;
+    border: 1px solid rgba(228, 226, 225, 0.86);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.84);
+    box-shadow: 0 12px 34px rgba(139, 90, 74, 0.06);
+    backdrop-filter: blur(14px);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .dashboard-metric-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(255,255,255,0.72), transparent 42%);
+    opacity: 0.82;
+  }
+
+  .dashboard-metric-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .dashboard-metric-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(145, 67, 37, 0.22);
+    box-shadow: 0 20px 52px rgba(139, 90, 74, 0.12);
+  }
+
+  .dashboard-metric-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+  }
+
+  .dashboard-mini-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border: 1px solid rgba(228, 226, 225, 0.86);
+    border-radius: 20px;
+    background: rgba(246, 243, 242, 0.76);
+    padding: 18px;
+    transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+  }
+
+  .dashboard-mini-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(145, 67, 37, 0.2);
+    background: rgba(255, 247, 243, 0.9);
+  }
+
+  .dashboard-mini-icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(228, 226, 225, 0.86);
+  }
+
+  .dashboard-progress {
+    height: 7px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(228, 226, 225, 0.9);
+  }
+
+  .dashboard-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    transition: width 500ms ease;
+  }
+
+  .dashboard-quick-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(228, 226, 225, 0.86);
+    border-radius: 18px;
+    padding: 14px;
+    transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+  }
+
+  .dashboard-quick-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(145, 67, 37, 0.2);
+    background: rgba(255, 247, 243, 0.78);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="reveal">
+  <div class="mb-8 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+    <div>
+      <div class="inline-flex items-center gap-2 rounded-full border border-[#e4e2e1] bg-white/78 px-3 py-1.5 text-xs font-[Space_Grotesk] font-bold tracking-[0.16em] text-[#914325] shadow-sm backdrop-blur">
+        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">auto_awesome</span>
+        ATELIER OPERATIONS
+      </div>
+      <h1 class="mt-5 font-[Playfair_Display] text-4xl font-semibold leading-tight text-[#1b1c1c] sm:text-5xl">
+        Good {{ now|date:'A'|lower }}, {{ request.user.get_short_name|default:request.user.username }}.
+      </h1>
+      <p class="mt-4 max-w-2xl text-base leading-7 text-[#55433d]">
+        {% if cms_is_designer %}A focused production workspace for assigned garments, progress updates, and atelier notes.{% else %}A focused overview of custom orders, published content, and the next actions for TSP Couture's studio.{% endif %}
+      </p>
+      <div class="mt-3 flex flex-wrap items-center gap-2 text-sm text-[#88726c]">
+        <span class="material-symbols-outlined text-[17px]" style="font-variation-settings:'wght'300">calendar_today</span>
+        <span>{{ now|date:'l, F j, Y' }}</span>
+        <span class="h-1 w-1 rounded-full bg-[#dcd9d9]"></span>
+        <span>{{ new_requests }} new {{ cms_is_designer|yesno:'assigned ,' }}request{{ new_requests|pluralize }}{% if not cms_is_designer %} to review{% endif %}</span>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <a href="{% url 'cms-admin:bespoke_list' %}" class="btn-secondary text-sm">
+        <span class="material-symbols-outlined text-[17px]" style="font-variation-settings:'wght'300">orders</span>
+        {% if cms_is_designer %}My Work{% else %}View Requests{% endif %}
+      </a>
+      {% if cms_can_manage_cms_content %}
+      <a href="{% url 'cms-admin:garment_create' %}" class="btn-primary text-sm">
+        <span class="material-symbols-outlined text-[17px]" style="font-variation-settings:'wght'300">add</span>
+        New Garment
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+    <a href="{% url 'cms-admin:bespoke_list' %}" class="dashboard-metric-card p-6 no-underline">
+      <div class="flex items-start justify-between gap-5">
+        <div>
+          <div class="font-[Space_Grotesk] text-xs font-bold tracking-[0.15em] text-[#88726c] uppercase">{% if cms_is_designer %}My Requests{% else %}Total Requests{% endif %}</div>
+          <div class="mt-4 font-[Playfair_Display] text-5xl font-semibold text-[#1b1c1c]">{{ total_requests }}</div>
+        </div>
+        <div class="dashboard-metric-icon bg-[#ffdad6]">
+          <span class="material-symbols-outlined text-[22px] text-[#93000a]" style="font-variation-settings:'wght'300">orders</span>
+        </div>
+      </div>
+      <div class="mt-5 flex flex-wrap items-center gap-2 text-sm text-[#55433d]">
+        <span class="material-symbols-outlined text-[16px] text-[#ba1a1a]" style="font-variation-settings:'wght'400">fiber_new</span>
+        <span>{{ new_requests }} new</span>
+        <span class="text-[#dcd9d9]">•</span>
+        <span>{{ in_progress }} in progress</span>
+      </div>
+    </a>
+
+    <a href="{% url 'cms-admin:bespoke_list' %}?status=in_progress" class="dashboard-metric-card p-6 no-underline">
+      <div class="flex items-start justify-between gap-5">
+        <div>
+          <div class="font-[Space_Grotesk] text-xs font-bold tracking-[0.15em] text-[#88726c] uppercase">In Progress</div>
+          <div class="mt-4 font-[Playfair_Display] text-5xl font-semibold text-[#4f5e81]">{{ in_progress }}</div>
+        </div>
+        <div class="dashboard-metric-icon bg-[#c5d4fd]">
+          <span class="material-symbols-outlined text-[22px] text-[#384668]" style="font-variation-settings:'wght'300">pending_actions</span>
+        </div>
+      </div>
+      <div class="mt-5 text-sm text-[#55433d]">{{ in_progress }} request{{ in_progress|pluralize }} currently being tailored</div>
+    </a>
+
+    <a href="{% url 'cms-admin:bespoke_list' %}?status=ready_for_review" class="dashboard-metric-card p-6 no-underline">
+      <div class="flex items-start justify-between gap-5">
+        <div>
+          <div class="font-[Space_Grotesk] text-xs font-bold tracking-[0.15em] text-[#88726c] uppercase">Ready for Review</div>
+          <div class="mt-4 font-[Playfair_Display] text-5xl font-semibold text-[#966b00]">{{ ready_for_review }}</div>
+        </div>
+        <div class="dashboard-metric-icon bg-[#fff4d6]">
+          <span class="material-symbols-outlined text-[22px] text-[#78540a]" style="font-variation-settings:'wght'300">fact_check</span>
+        </div>
+      </div>
+      <div class="mt-5 text-sm text-[#55433d]">{{ ready_for_review }} request{{ ready_for_review|pluralize }} awaiting {% if cms_is_designer %}supervisor{% else %}final{% endif %} review</div>
+    </a>
+
+    <a href="{% url 'cms-admin:bespoke_list' %}?status=completed" class="dashboard-metric-card p-6 no-underline">
+      <div class="flex items-start justify-between gap-5">
+        <div>
+          <div class="font-[Space_Grotesk] text-xs font-bold tracking-[0.15em] text-[#88726c] uppercase">Completed</div>
+          <div class="mt-4 font-[Playfair_Display] text-5xl font-semibold text-[#065f46]">{{ completed }}</div>
+        </div>
+        <div class="dashboard-metric-icon bg-[#d1fae5]">
+          <span class="material-symbols-outlined text-[22px] text-[#065f46]" style="font-variation-settings:'wght'300">check_circle</span>
+        </div>
+      </div>
+      <div class="mt-5 text-sm text-[#55433d]">{{ completed }} request{{ completed|pluralize }} delivered successfully</div>
+    </a>
+
+    {% if cms_can_manage_cms_content %}
+    <a href="{% url 'cms-admin:garment_list' %}" class="dashboard-metric-card p-6 no-underline">
+      <div class="flex items-start justify-between gap-5">
+        <div>
+          <div class="font-[Space_Grotesk] text-xs font-bold tracking-[0.15em] text-[#88726c] uppercase">{% if cms_is_designer %}Assigned Work{% else %}Published{% endif %}</div>
+          <div class="mt-4 font-[Playfair_Display] text-5xl font-semibold text-[#1b1c1c]">{{ published_garments }}</div>
+        </div>
+        <div class="dashboard-metric-icon bg-[#ffdbcf]">
+          <span class="material-symbols-outlined text-[22px] text-[#914325]" style="font-variation-settings:'wght'300">visibility</span>
+        </div>
+      </div>
+      <div class="mt-5 text-sm text-[#55433d]">{{ total_garments }} total garments in the collection</div>
+    </a>
+    {% endif %}
+  </div>
+
+  <div class="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+    <section class="card">
+      <div class="flex flex-col gap-4 border-b border-[#e4e2e1] p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Recent Requests</h2>
+          <p class="mt-1 text-sm text-[#88726c]">Latest {% if cms_is_designer %}assigned {% endif %}bespoke enquiries from the frontend order form.</p>
+        </div>
+        <a href="{% url 'cms-admin:bespoke_list' %}" class="font-[Space_Grotesk] text-xs font-bold tracking-[0.12em] text-[#914325] no-underline hover:text-[#783114]">
+          View All
+          <span class="material-symbols-outlined ml-1 align-middle text-[14px]" style="font-variation-settings:'wght'300">arrow_forward</span>
+        </a>
+      </div>
+
+      {% if recent_requests %}
+      <div class="overflow-x-auto" style="scrollbar-gutter: stable">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Garment</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th class="text-right">Open</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for req in recent_requests %}
+            <tr>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#fff7f3] font-[Playfair_Display] text-sm font-bold text-[#914325] ring-1 ring-[#e4e2e1]">
+                    {{ req.name|make_list|first|upper }}
+                  </div>
+                  <div class="min-w-0">
+                    <a href="{% url 'cms-admin:bespoke_detail' req.pk %}" class="block truncate font-bold text-[#1b1c1c] no-underline hover:text-[#914325]">{{ req.name }}</a>
+                    {% if cms_can_view_full_client_pii %}
+                    <div class="mt-0.5 text-xs text-[#55433d]">{{ req.email }}</div>
+                    {% else %}
+                    <div class="mt-0.5 text-xs text-[#88726c]">{{ req.email }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+              </td>
+              <td class="font-medium text-[#55433d]">{{ req.garment_type|default:'Custom Design' }}</td>
+              <td><span class="status-badge status-{{ req.status }}">{{ req.get_status_display }}</span></td>
+              <td class="text-sm text-[#88726c] whitespace-nowrap">{{ req.created_at|date:'M j, Y' }}</td>
+              <td class="text-right">
+                <a href="{% url 'cms-admin:bespoke_detail' req.pk %}" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#e4e2e1] bg-white text-[#55433d] no-underline transition hover:border-[#ffb59b] hover:bg-[#ffdbcf] hover:text-[#914325]" aria-label="Open {{ req.name|escapejs }} request">
+                  <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">arrow_forward_ios</span>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="px-6 py-16 text-center">
+        <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f0eded] text-[#88726c]">
+          <span class="material-symbols-outlined text-[30px]" style="font-variation-settings:'wght'300">inbox</span>
+        </div>
+        <h3 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">No bespoke requests yet</h3>
+        <p class="mx-auto mt-2 max-w-md text-sm text-[#88726c]">When customers submit an order, the latest enquiries will appear here.</p>
+      </div>
+      {% endif %}
+    </section>
+
+    {% if cms_can_manage_cms_content %}
+    <aside class="space-y-6">
+    <section class="card p-6">
+        <div class="mb-5 flex items-start justify-between">
+          <div>
+            <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Studio Overview</h2>
+            <p class="mt-1 text-sm text-[#88726c]">Published content at a glance.</p>
+          </div>
+          <div class="grid h-12 w-12 place-items-center rounded-full bg-[#f0eded]">
+            <span class="material-symbols-outlined text-[22px] text-[#914325]" style="font-variation-settings:'wght'300">auto_awesome</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <a href="{% url 'cms-admin:garment_list' %}" class="dashboard-mini-card no-underline">
+            <div class="flex items-center gap-3">
+              <span class="dashboard-mini-icon">
+                <span class="material-symbols-outlined text-[20px] text-[#914325]" style="font-variation-settings:'wght'300">checkroom</span>
+              </span>
+              <span>
+                <span class="block text-sm font-bold text-[#1b1c1c]">Garments</span>
+                <span class="text-xs text-[#88726c]">{{ published_garments }} published</span>
+              </span>
+            </div>
+            <span class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">{{ total_garments }}</span>
+          </a>
+
+          <a href="{% url 'cms-admin:testimonial_list' %}" class="dashboard-mini-card no-underline">
+            <div class="flex items-center gap-3">
+              <span class="dashboard-mini-icon">
+                <span class="material-symbols-outlined text-[20px] text-[#4f5e81]" style="font-variation-settings:'wght'300">format_quote</span>
+              </span>
+              <span>
+                <span class="block text-sm font-bold text-[#1b1c1c]">Testimonials</span>
+                <span class="text-xs text-[#88726c]">{{ published_testimonials }} published</span>
+              </span>
+            </div>
+            <span class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">{{ total_testimonials }}</span>
+          </a>
+
+          <a href="{% url 'cms-admin:silhouette_list' %}" class="dashboard-mini-card no-underline">
+            <div class="flex items-center gap-3">
+              <span class="dashboard-mini-icon">
+                <span class="material-symbols-outlined text-[20px] text-[#914325]" style="font-variation-settings:'wght'300">style</span>
+              </span>
+              <span>
+                <span class="block text-sm font-bold text-[#1b1c1c]">Silhouettes</span>
+                <span class="text-xs text-[#88726c]">{{ published_silhouettes }} published</span>
+              </span>
+            </div>
+            <span class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">{{ total_silhouettes }}</span>
+          </a>
+
+          <a href="{% url 'cms-admin:swatch_list' %}" class="dashboard-mini-card no-underline">
+            <div class="flex items-center gap-3">
+              <span class="dashboard-mini-icon">
+                <span class="material-symbols-outlined text-[20px] text-[#914325]" style="font-variation-settings:'wght'300">palette</span>
+              </span>
+              <span>
+                <span class="block text-sm font-bold text-[#1b1c1c]">Swatches</span>
+                <span class="text-xs text-[#88726c]">{{ published_swatches }} published</span>
+              </span>
+            </div>
+            <span class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">{{ total_swatches }}</span>
+          </a>
+        </div>
+      </section>
+    </aside>
+    {% endif %}
+  </div>
+
+  <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+    <section class="card p-6">
+      <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">{% if cms_is_designer %}My Pipeline{% else %}Request Pipeline{% endif %}</h2>
+          <p class="mt-1 text-sm text-[#88726c]">Distribution across {% if cms_is_designer %}your assigned {% endif %}bespoke request statuses.</p>
+        </div>
+        <div class="inline-flex items-center gap-2 rounded-full bg-[#f6f3f2] px-3 py-1.5 text-sm font-medium text-[#55433d]">
+          <span class="material-symbols-outlined text-[16px] text-[#914325]" style="font-variation-settings:'wght'300">donut_large</span>
+          {{ total_requests }} total
+        </div>
+      </div>
+
+      {% if total_requests > 0 %}
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {% for code, count in status_counts.items %}
+        <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4">
+          <div class="mb-3 flex items-center justify-between text-sm">
+            <span class="font-bold text-[#55433d] capitalize">
+              {% if code == 'in_progress' %}In Progress{% else %}{{ code|title }}{% endif %}
+            </span>
+            <span class="font-[Playfair_Display] text-xl font-semibold text-[#1b1c1c]">{{ count }}</span>
+          </div>
+          <div class="dashboard-progress">
+            <div class="dashboard-progress-fill {% if code == 'new' %}bg-[#ba1a1a]{% elif code == 'in_progress' %}bg-[#4f5e81]{% elif code == 'completed' %}bg-[#065f46]{% else %}bg-[#88726c]{% endif %}" style="width: {% widthratio count total_requests 100 %}%"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="rounded-2xl border border-dashed border-[#dcd9d9] bg-[#f6f3f2] p-8 text-center">
+        <span class="material-symbols-outlined mx-auto mb-3 block text-[34px] text-[#88726c]" style="font-variation-settings:'wght'300">analytics</span>
+        <p class="text-sm text-[#88726c]">Pipeline metrics will appear after the first bespoke request is submitted.</p>
+      </div>
+      {% endif %}
+    </section>
+
+    {% if cms_can_manage_cms_content or cms_can_manage_site_configuration %}
+    <section class="card p-6">
+      <div class="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Storefront Controls</h2>
+          <p class="mt-1 text-sm text-[#88726c]">Keep the storefront ready.</p>
+        </div>
+        <div class="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#f0eded]">
+          <span class="material-symbols-outlined text-[22px] text-[#966b00]" style="font-variation-settings:'wght'300">tune</span>
+        </div>
+      </div>
+      <div class="space-y-3">
+        {% if cms_can_manage_cms_content %}
+        <a href="{% url 'cms-admin:silhouette_list' %}" class="dashboard-quick-card no-underline">
+          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#ffdbcf]">
+            <span class="material-symbols-outlined text-[18px] text-[#914325]" style="font-variation-settings:'wght'300">style</span>
+          </span>
+          <span class="text-sm font-bold text-[#55433d]">Review silhouettes</span>
+        </a>
+        {% endif %}
+        {% if cms_can_manage_cms_content %}
+        <a href="{% url 'cms-admin:swatch_list' %}" class="dashboard-quick-card no-underline">
+          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#ffdbcf]">
+            <span class="material-symbols-outlined text-[18px] text-[#914325]" style="font-variation-settings:'wght'300">palette</span>
+          </span>
+          <span class="text-sm font-bold text-[#55433d]">Update fabric swatches</span>
+        </a>
+        {% endif %}
+        {% if cms_can_manage_site_configuration %}
+        <a href="{% url 'cms-admin:site_configuration' %}" class="dashboard-quick-card no-underline">
+          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#ffdbcf]">
+            <span class="material-symbols-outlined text-[18px] text-[#966b00]" style="font-variation-settings:'wght'300">tune</span>
+          </span>
+          <span class="text-sm font-bold text-[#55433d]">Edit site settings</span>
+        </a>
+        {% endif %}
+      </div>
+    </section>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

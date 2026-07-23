@@ -1,0 +1,592 @@
+{% extends 'cms_admin/base.html' %}
+{% load cms_admin_extras %}
+{% block title %}{{ bespoke_request.name }} — Bespoke Request{% endblock %}
+
+{% block extra_head %}
+<style>
+  .detail-page {
+    position: relative;
+    min-height: calc(100vh - 76px);
+    background:
+      radial-gradient(circle at 8% 2%, rgba(145, 67, 37, 0.13), transparent 28rem),
+      radial-gradient(circle at 86% 18%, rgba(79, 94, 129, 0.08), transparent 30rem),
+      linear-gradient(180deg, rgba(255,255,255,0.56), rgba(246,243,242,0.62));
+  }
+  .detail-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(136, 114, 108, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(136, 114, 108, 0.055) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.34), transparent 70%);
+  }
+  .detail-page > div { position: relative; z-index: 1; }
+  .detail-card { transition: border-color 180ms ease, box-shadow 180ms ease; }
+  .detail-card:hover { border-color: rgba(145,67,37,0.18); box-shadow: 0 18px 44px rgba(139,90,74,0.09); }
+  .note-line { white-space: pre-wrap; }
+  .pipeline-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(27,28,28,0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+  }
+  .pipeline-modal-overlay.show { opacity: 1; pointer-events: all; }
+  .pipeline-modal {
+    background: #fff;
+    border-radius: 24px;
+    padding: 30px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 30px 80px rgba(27,28,28,0.2);
+    transform: scale(0.92);
+    transition: transform 250ms cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .pipeline-modal-overlay.show .pipeline-modal { transform: scale(1); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="detail-page -m-8 px-8 pb-8 lg:-m-8 lg:px-8">
+  <div class="mx-auto max-w-[1480px]">
+    <div class="mb-8 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+      <div class="reveal max-w-3xl">
+        <a href="{% url 'cms-admin:bespoke_list' %}" class="btn-ghost mb-5 px-0">
+          <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">arrow_back</span>
+          Back to Requests
+        </a>
+        <div class="mb-4 flex flex-wrap items-center gap-2">
+          <span class="rounded-full bg-[#fff7f3] px-3 py-1.5 text-xs font-[Space_Grotesk] font-bold uppercase tracking-[0.16em] text-[#914325] ring-1 ring-[#e4e2e1]">Request #{{ bespoke_request.pk }}</span>
+          <span class="rounded-full bg-white/82 px-3 py-1.5 text-xs font-medium text-[#88726c] ring-1 ring-[#e4e2e1]">Received {{ bespoke_request.created_at|date:'F j, Y' }}</span>
+        </div>
+        <h1 class="font-[Playfair_Display] text-4xl font-semibold leading-tight text-[#1b1c1c] sm:text-5xl">{{ bespoke_request.name }}</h1>
+        <p class="mt-4 text-base leading-7 text-[#55433d]">{{ bespoke_request.garment_type|default:'Custom Design' }} · Frontend bespoke enquiry</p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3 lg:justify-end">
+        <span class="status-badge status-{{ bespoke_request.status }}">{{ bespoke_request.get_status_display }}</span>
+        {% if cms_can_view_full_client_pii %}
+        <a href="mailto:{{ bespoke_request.email }}" class="btn-secondary">
+          <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">mail</span>
+          Email Client
+        </a>
+        {% else %}
+        <span class="btn-ghost cursor-not-allowed">
+          <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">lock</span>
+          PII Redacted
+        </span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="mb-7 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div class="admin-card detail-card p-5">
+        <div class="flex items-center justify-between">
+          <span class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.12em] text-[#88726c]">Client</span>
+          <span class="material-symbols-outlined text-[18px] text-[#88726c]" style="font-variation-settings:'wght'300">person</span>
+        </div>
+        <div class="mt-4 font-[Playfair_Display] text-3xl font-semibold text-[#1b1c1c]">{{ bespoke_request.name }}</div>
+        <div class="mt-1 text-xs text-[#88726c]">{% if cms_can_view_full_client_pii %}{{ bespoke_request.phone|default:'Phone not provided' }}{% else %}{{ bespoke_request.phone|default:'Phone not provided' }}{% endif %}</div>
+      </div>
+      <div class="admin-card detail-card p-5">
+        <div class="flex items-center justify-between">
+          <span class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.12em] text-[#88726c]">Garment</span>
+          <span class="material-symbols-outlined text-[18px] text-[#88726c]" style="font-variation-settings:'wght'300">checkroom</span>
+        </div>
+        <div class="mt-4 font-[Playfair_Display] text-3xl font-semibold text-[#1b1c1c]">{{ bespoke_request.garment_type|default:'Custom Design' }}</div>
+        <div class="mt-1 text-xs text-[#88726c]">Selected by client</div>
+      </div>
+      <div class="admin-card detail-card p-5">
+        <div class="flex items-center justify-between">
+          <span class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.12em] text-[#88726c]">Size</span>
+          <span class="material-symbols-outlined text-[18px] text-[#88726c]" style="font-variation-settings:'wght'300">straighten</span>
+        </div>
+        <div class="mt-4 font-[Playfair_Display] text-3xl font-semibold text-[#1b1c1c]">{{ bespoke_request.standard_size|default:'Not specified' }}</div>
+        <div class="mt-1 text-xs text-[#88726c]">Height {{ bespoke_request.height|default:'not provided' }}</div>
+      </div>
+      <div class="admin-card detail-card p-5">
+        <div class="flex items-center justify-between">
+          <span class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.12em] text-[#88726c]">Updated</span>
+          <span class="material-symbols-outlined text-[18px] text-[#88726c]" style="font-variation-settings:'wght'300">schedule</span>
+        </div>
+        <div class="mt-4 font-[Playfair_Display] text-3xl font-semibold text-[#1b1c1c]">{{ bespoke_request.updated_at|date:'M j, Y' }}</div>
+        <div class="mt-1 text-xs text-[#88726c]">{{ bespoke_request.updated_at|date:'g:i A' }}</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+      <div class="space-y-6">
+        <section class="admin-card overflow-hidden">
+          <div class="border-b border-[#e4e2e1] bg-white/70 p-5">
+            <h2 class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.15em] text-[#88726c]">Contact Information</h2>
+          </div>
+            <div class="grid gap-px bg-[#e4e2e1] sm:grid-cols-2">
+              <div class="bg-white p-5">
+                <div class="text-xs font-bold text-[#88726c]">Full Name</div>
+                <div class="mt-1 text-sm font-bold text-[#1b1c1c]">{{ bespoke_request.name }}</div>
+              </div>
+              {% if cms_can_view_full_client_pii %}
+              <div class="bg-white p-5">
+                <div class="text-xs font-bold text-[#88726c]">Email</div>
+                <a href="mailto:{{ bespoke_request.email }}" class="mt-1 block text-sm font-bold text-[#914325] no-underline hover:underline">{{ bespoke_request.email }}</a>
+              </div>
+              {% else %}
+              <div class="bg-white p-5">
+                <div class="text-xs font-bold text-[#88726c]">Email</div>
+                <div class="mt-1 text-sm font-bold text-[#88726c]">{{ bespoke_request.email }}</div>
+              </div>
+              {% endif %}
+              <div class="bg-white p-5">
+                <div class="text-xs font-bold text-[#88726c]">Phone</div>
+                {% if cms_can_view_full_client_pii %}
+                <div class="mt-1 text-sm font-bold text-[#1b1c1c]">{{ bespoke_request.phone|default:'Not provided' }}</div>
+                {% else %}
+                <div class="mt-1 text-sm font-bold text-[#88726c]">{{ bespoke_request.phone|default:'Not provided' }}</div>
+                {% endif %}
+              </div>
+              <div class="bg-white p-5">
+                <div class="text-xs font-bold text-[#88726c]">Submitted</div>
+                <div class="mt-1 text-sm font-bold text-[#1b1c1c]">{{ bespoke_request.created_at|date:'F j, Y \a\t g:i A' }}</div>
+              </div>
+            </div>
+        </section>
+
+        <section class="admin-card overflow-hidden">
+          <div class="border-b border-[#e4e2e1] bg-white/70 p-5">
+            <h2 class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.15em] text-[#88726c]">Garment & Style Brief</h2>
+          </div>
+          <div class="p-5">
+            <div class="grid gap-4 sm:grid-cols-3">
+              <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4">
+                <div class="text-xs font-bold text-[#88726c]">Garment Type</div>
+                <div class="mt-1 text-sm font-bold text-[#1b1c1c]">{{ bespoke_request.garment_type|default:'Custom Design' }}</div>
+              </div>
+              <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4">
+                <div class="text-xs font-bold text-[#88726c]">Standard Size</div>
+                <div class="mt-1 text-sm font-bold text-[#1b1c1c]">{{ bespoke_request.standard_size|default:'Not specified' }}</div>
+              </div>
+              <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4">
+                <div class="text-xs font-bold text-[#88726c]">Body Height</div>
+                <div class="mt-1 text-sm font-bold text-[#1b1c1c]">{{ bespoke_request.height|default:'Not specified' }}</div>
+              </div>
+            </div>
+
+            {% if bespoke_request.fabrics %}
+            <div class="mt-5">
+              <div class="mb-2 text-xs font-bold text-[#88726c]">Selected Fabrics</div>
+              <div class="flex flex-wrap gap-2">
+                {% for fabric in bespoke_request.fabrics|split:',' %}
+                <span class="rounded-full bg-[#fff7f3] px-3 py-1.5 text-xs font-[Space_Grotesk] font-bold uppercase tracking-[0.08em] text-[#914325] ring-1 ring-[#e4e2e1]">{{ fabric }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="mt-5 grid gap-4 md:grid-cols-3">
+              {% if bespoke_request.color_notes %}
+              <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4">
+                <div class="mb-2 text-xs font-bold text-[#88726c]">Color Preferences</div>
+                <div class="text-sm leading-6 text-[#1b1c1c] note-line">{{ bespoke_request.color_notes|linebreaksbr }}</div>
+              </div>
+              {% endif %}
+              {% if bespoke_request.inspiration_notes %}
+              <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4">
+                <div class="mb-2 text-xs font-bold text-[#88726c]">Inspiration & Design Thoughts</div>
+                <div class="text-sm leading-6 text-[#1b1c1c] note-line">{{ bespoke_request.inspiration_notes|linebreaksbr }}</div>
+              </div>
+              {% endif %}
+              {% if bespoke_request.fit_notes %}
+              <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4">
+                <div class="mb-2 text-xs font-bold text-[#88726c]">Fit Preferences</div>
+                <div class="text-sm leading-6 text-[#1b1c1c] note-line">{{ bespoke_request.fit_notes|linebreaksbr }}</div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </section>
+
+        {% if bespoke_request.chest or bespoke_request.waist or bespoke_request.shoulder or bespoke_request.sleeve or bespoke_request.neck or bespoke_request.length %}
+        <section class="admin-card overflow-hidden">
+          <div class="border-b border-[#e4e2e1] bg-white/70 p-5">
+            <h2 class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.15em] text-[#88726c]">Measurements (inches)</h2>
+          </div>
+          <div class="grid gap-px bg-[#e4e2e1] sm:grid-cols-2 lg:grid-cols-3">
+            {% if bespoke_request.chest %}<div class="bg-white p-5"><div class="text-xs font-bold text-[#88726c]">Chest</div><div class="mt-1 text-sm font-bold text-[#1b1c1c]">{{ bespoke_request.chest }}</div></div>{% endif %}
+            {% if bespoke_request.waist %}<div class="bg-white p-5"><div class="text-xs font-bold text-[#88726c]">Waist</div><div class="mt-1 text-sm font-bold text-[#1b1c1c]">{{ bespoke_request.waist }}</div></div>{% endif %}
+            {% if bespoke_request.shoulder %}<div class="bg-white p-5"><div class="text-xs font-bold text-[#88726c]">Shoulder</div><div class="mt-1 text-sm font-bold text-[#1b1c1c]">{{ bespoke_request.shoulder }}</div></div>{% endif %}
+            {% if bespoke_request.sleeve %}<div class="bg-white p-5"><div class="text-xs font-bold text-[#88726c]">Sleeve</div><div class="mt-1 text-sm font-bold text-[#1b1c1c]">{{ bespoke_request.sleeve }}</div></div>{% endif %}
+            {% if bespoke_request.neck %}<div class="bg-white p-5"><div class="text-xs font-bold text-[#88726c]">Neck</div><div class="mt-1 text-sm font-bold text-[#1b1c1c]">{{ bespoke_request.neck }}</div></div>{% endif %}
+            {% if bespoke_request.length %}<div class="bg-white p-5"><div class="text-xs font-bold text-[#88726c]">Length</div><div class="mt-1 text-sm font-bold text-[#1b1c1c]">{{ bespoke_request.length }}</div></div>{% endif %}
+          </div>
+        </section>
+        {% endif %}
+
+        {% if bespoke_request.pinterest_link or bespoke_request.reference_file %}
+        <section class="admin-card overflow-hidden">
+          <div class="border-b border-[#e4e2e1] bg-white/70 p-5">
+            <h2 class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.15em] text-[#88726c]">Client References</h2>
+          </div>
+          <div class="p-5">
+            {% if bespoke_request.pinterest_link %}
+            <div class="mb-4 rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4">
+              <div class="mb-1 text-xs font-bold text-[#88726c]">Pinterest Board</div>
+              <a href="{{ bespoke_request.pinterest_link }}" target="_blank" rel="noopener noreferrer" class="text-sm font-bold text-[#914325] no-underline hover:underline break-all">
+                {{ bespoke_request.pinterest_link }}
+                <span class="material-symbols-outlined text-[14px] align-middle" style="font-variation-settings:'wght'300">open_in_new</span>
+              </a>
+            </div>
+            {% endif %}
+            {% if bespoke_request.reference_file %}
+            <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4">
+              <div class="mb-3 text-xs font-bold text-[#88726c]">Reference File</div>
+              <a href="{{ bespoke_request.reference_file.url }}" target="_blank" rel="noopener noreferrer" class="btn-secondary text-sm">
+                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">download</span>
+                Download Reference
+              </a>
+            </div>
+            {% endif %}
+          </div>
+        </section>
+        {% endif %}
+
+        {% if cms_can_view_full_client_pii %}
+        <section class="admin-card overflow-hidden">
+          <div class="border-b border-[#e4e2e1] bg-white/70 p-5">
+            <h2 class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.15em] text-[#88726c]">Frontend Submission Agreements</h2>
+          </div>
+          <div class="grid gap-px bg-[#e4e2e1] sm:grid-cols-3">
+            <div class="bg-white p-5">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] {% if bespoke_request.agreed_no_returns %}text-[#059669]{% else %}text-[#88726c]{% endif %}" style="font-variation-settings:'wght'300">{% if bespoke_request.agreed_no_returns %}check_circle{% else %}radio_button_unchecked{% endif %}</span>
+                <span class="text-sm font-bold text-[#1b1c1c]">No Returns</span>
+              </div>
+              <div class="mt-2 text-xs text-[#88726c]">Policy acknowledged by client.</div>
+            </div>
+            <div class="bg-white p-5">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] {% if bespoke_request.agreed_offline_payment %}text-[#059669]{% else %}text-[#88726c]{% endif %}" style="font-variation-settings:'wght'300">{% if bespoke_request.agreed_offline_payment %}check_circle{% else %}radio_button_unchecked{% endif %}</span>
+                <span class="text-sm font-bold text-[#1b1c1c]">Offline Payment</span>
+              </div>
+              <div class="mt-2 text-xs text-[#88726c]">Payment method acknowledged.</div>
+            </div>
+            <div class="bg-white p-5">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] {% if bespoke_request.agreed_consultation %}text-[#059669]{% else %}text-[#88726c]{% endif %}" style="font-variation-settings:'wght'300">{% if bespoke_request.agreed_consultation %}check_circle{% else %}radio_button_unchecked{% endif %}</span>
+                <span class="text-sm font-bold text-[#1b1c1c]">Consultation</span>
+              </div>
+              <div class="mt-2 text-xs text-[#88726c]">Follow-up allowed.</div>
+            </div>
+          </div>
+        </section>
+        {% endif %}
+      </div>
+
+      <aside class="space-y-6">
+        <section class="admin-card p-5">
+          <div class="mb-4">
+            <h2 class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.15em] text-[#88726c]">Update Pipeline Status</h2>
+            <p class="mt-1 text-xs leading-5 text-[#88726c]">Keep the atelier pipeline accurate for the client’s garment journey.</p>
+          </div>
+          <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+            <div class="rounded-2xl border border-[#f5c6c6] bg-[#ffdad6]/70 p-4 text-sm font-medium text-[#93000a]">
+              {{ form.non_field_errors.0 }}
+            </div>
+            {% endif %}
+            <div>
+              <label for="{{ form.status.id_for_label }}" class="admin-label">Status</label>
+              {{ form.status }}
+              {% if form.status.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.status.errors.0 }}</p>{% endif %}
+            </div>
+            {% if form.assigned_to %}
+            <div>
+              <label for="{{ form.assigned_to.id_for_label }}" class="admin-label">Assigned Designer</label>
+              {{ form.assigned_to }}
+              {% if form.assigned_to.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.assigned_to.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+            <div>
+              <label for="{{ form.work_notes.id_for_label }}" class="admin-label">Work / Progress Notes</label>
+              {{ form.work_notes }}
+              {% if form.work_notes.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.work_notes.errors.0 }}</p>{% endif %}
+            </div>
+            {% if cms_can_edit_internal_notes %}
+            <div>
+              <label for="{{ form.admin_notes.id_for_label }}" class="admin-label">Admin Notes</label>
+              {{ form.admin_notes }}
+              {% if form.admin_notes.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.admin_notes.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+            {% if form.send_completion_email %}
+            <label class="flex items-start gap-3 rounded-2xl border border-[#e4e2e1] bg-[#fff7f3] p-4 text-sm leading-6 text-[#1b1c1c]">
+              {{ form.send_completion_email }}
+              <span>
+                <span class="block font-bold">Completion email</span>
+                Send the customer-ready notification when this request is marked or kept as Completed.
+              </span>
+            </label>
+            {% if form.send_completion_email.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.send_completion_email.errors.0 }}</p>{% endif %}
+            {% endif %}
+            {% if form.notify_in_progress %}
+            <div class="status-notify" data-status="in_progress" style="display:none;">
+              <label class="flex items-start gap-3 rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4 text-sm leading-6 text-[#1b1c1c]">
+                {{ form.notify_in_progress }}
+                <span>
+                  <span class="block font-bold">In-progress update</span>
+                  Send the client a note that work has started on their garment.
+                </span>
+              </label>
+              {% if form.notify_in_progress.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.notify_in_progress.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+            {% if form.notify_ready_for_review %}
+            <div class="status-notify" data-status="ready_for_review" style="display:none;">
+              <label class="flex items-start gap-3 rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4 text-sm leading-6 text-[#1b1c1c]">
+                {{ form.notify_ready_for_review }}
+                <span>
+                  <span class="block font-bold">Ready-for-review update</span>
+                  Notify the client that their garment is ready for final inspection.
+                </span>
+              </label>
+              {% if form.notify_ready_for_review.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.notify_ready_for_review.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+            {% if form.notify_cancelled %}
+            <div class="status-notify" data-status="cancelled" style="display:none;">
+              <label class="flex items-start gap-3 rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4 text-sm leading-6 text-[#1b1c1c]">
+                {{ form.notify_cancelled }}
+                <span>
+                  <span class="block font-bold">Cancellation notice</span>
+                  Inform the client that this order has been cancelled.
+                </span>
+              </label>
+              {% if form.notify_cancelled.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.notify_cancelled.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+            <button type="submit" class="btn-primary w-full">
+              <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">save</span>
+              Update Request
+            </button>
+          </form>
+        </section>
+
+        {% if cms_can_edit_internal_notes and bespoke_request.admin_notes %}
+        <section class="admin-card p-5">
+          <div class="mb-3 flex items-center justify-between">
+            <h2 class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.15em] text-[#88726c]">Current Internal Notes</h2>
+            <span class="material-symbols-outlined text-[18px] text-[#88726c]" style="font-variation-settings:'wght'300">note_alt</span>
+          </div>
+          <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4 text-sm leading-6 text-[#1b1c1c] note-line">{{ bespoke_request.admin_notes|linebreaksbr }}</div>
+        </section>
+        {% endif %}
+
+        {% if bespoke_request.work_notes %}
+        <section class="admin-card p-5">
+          <div class="mb-3 flex items-center justify-between">
+            <h2 class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.15em] text-[#88726c]">Current Work Notes</h2>
+            <span class="material-symbols-outlined text-[18px] text-[#88726c]" style="font-variation-settings:'wght'300">notes</span>
+          </div>
+          <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4 text-sm leading-6 text-[#1b1c1c] note-line">{{ bespoke_request.work_notes|linebreaksbr }}</div>
+        </section>
+        {% endif %}
+
+        {% if status_history %}
+        <section class="admin-card p-5">
+          <div class="mb-3 flex items-center justify-between">
+            <h2 class="font-[Space_Grotesk] text-xs font-bold uppercase tracking-[0.15em] text-[#88726c]">Status History</h2>
+            <span class="material-symbols-outlined text-[18px] text-[#88726c]" style="font-variation-settings:'wght'300">history</span>
+          </div>
+          <div class="space-y-3">
+            {% for entry in status_history %}
+            <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4">
+              <div class="flex flex-wrap items-center gap-2 text-xs text-[#88726c]">
+                <span class="status-badge status-{{ entry.old_status }}">{% if entry.old_status == 'new' %}New{% elif entry.old_status == 'in_progress' %}In Progress{% elif entry.old_status == 'ready_for_review' %}Ready for Review{% elif entry.old_status == 'completed' %}Completed{% else %}Cancelled{% endif %}</span>
+                <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                <span class="status-badge status-{{ entry.new_status }}">{{ entry.get_new_status_display }}</span>
+                <span class="text-[#88726c]">·</span>
+                <span>{{ entry.created_at|date:'M j, Y g:i A' }}</span>
+              </div>
+              {% if entry.changed_by %}
+              <div class="mt-2 text-xs text-[#55433d]">Updated by {{ entry.changed_by.get_full_name|default:entry.changed_by.username }}</div>
+              {% endif %}
+              {% if entry.note %}
+              <div class="mt-2 text-sm leading-6 text-[#1b1c1c] note-line">{{ entry.note|linebreaksbr }}</div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+      </aside>
+    </div>
+
+    <div id="pipeline-confirm-modal" class="pipeline-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="pipeline-modal-title">
+      <div class="pipeline-modal">
+        <div class="flex items-start gap-4 mb-5">
+          <div class="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#ffdbcf]">
+            <span class="material-symbols-outlined text-[24px] text-[#914325]" style="font-variation-settings:'wght'300">send</span>
+          </div>
+          <div>
+            <h3 id="pipeline-modal-title" class="font-[Playfair_Display] text-xl font-semibold text-[#1b1c1c]">Confirm Pipeline Update</h3>
+            <p class="mt-1 text-sm text-[#55433d]">Please review the details below before continuing.</p>
+          </div>
+        </div>
+        <div class="space-y-3 mb-6">
+          <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4">
+            <div class="text-xs font-bold text-[#88726c] mb-1">Client</div>
+            <div class="text-sm font-bold text-[#1b1c1c]" id="pipeline-modal-client"></div>
+          </div>
+          <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4">
+            <div class="text-xs font-bold text-[#88726c] mb-1">New Status</div>
+            <div id="pipeline-modal-status"></div>
+          </div>
+          <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4" id="pipeline-modal-email-block" style="display:none;">
+            <div class="text-xs font-bold text-[#88726c] mb-1">Completion Email</div>
+            <div class="text-sm font-bold text-[#1b1c1c]">A completion notification will be sent to <span id="pipeline-modal-email" class="text-[#914325]"></span></div>
+          </div>
+          <div class="rounded-2xl border border-[#e4e2e1] bg-[#f6f3f2] p-4" id="pipeline-modal-notes-block" style="display:none;">
+            <div class="text-xs font-bold text-[#88726c] mb-1">Work Notes</div>
+            <div class="text-sm text-[#55433d] whitespace-pre-wrap" id="pipeline-modal-notes"></div>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <button type="button" id="pipeline-modal-cancel" class="btn-secondary flex-1">Cancel</button>
+          <button type="button" id="pipeline-modal-confirm" class="btn-primary flex-1">
+            <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">check</span>
+            Confirm Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var form = document.querySelector('form[method="post"]');
+  if (!form) return;
+
+  var statusSelect = document.getElementById('{{ form.status.id_for_label }}');
+  var completionCheckbox = document.querySelector('input[name="send_completion_email"]');
+  var modal = document.getElementById('pipeline-confirm-modal');
+  var modalClient = document.getElementById('pipeline-modal-client');
+  var modalStatus = document.getElementById('pipeline-modal-status');
+  var modalEmailBlock = document.getElementById('pipeline-modal-email-block');
+  var modalEmail = document.getElementById('pipeline-modal-email');
+  var modalNotesBlock = document.getElementById('pipeline-modal-notes-block');
+  var modalNotes = document.getElementById('pipeline-modal-notes');
+  var btnConfirm = document.getElementById('pipeline-modal-confirm');
+  var btnCancel = document.getElementById('pipeline-modal-cancel');
+  var clientName = '{{ bespoke_request.name|escapejs }}';
+  var clientEmail = '{{ bespoke_request.email|escapejs }}';
+  var statusLabels = {{ status_labels|safe }};
+
+  function statusBadge(status) {
+    var label = statusLabels[status] || status;
+    return '<span class="status-badge status-' + status + '">' + label + '</span>';
+  }
+
+  function showModal() {
+    if (!modal) return;
+    var status = statusSelect ? statusSelect.value : '';
+    var isCompleted = status === 'completed';
+    var willSendEmail = completionCheckbox ? completionCheckbox.checked : false;
+
+    modalClient.textContent = clientName;
+    modalStatus.innerHTML = statusBadge(status);
+
+    if (completionCheckbox) {
+      willSendEmail = isCompleted && completionCheckbox.checked;
+    }
+
+    if (willSendEmail && completionCheckbox) {
+      modalEmailBlock.style.display = '';
+      modalEmail.textContent = clientEmail;
+    } else {
+      modalEmailBlock.style.display = 'none';
+    }
+
+    var notes = form.querySelector('textarea[name="work_notes"]');
+    if (notes && notes.value.trim()) {
+      modalNotesBlock.style.display = '';
+      modalNotes.textContent = notes.value.trim();
+    } else {
+      modalNotesBlock.style.display = 'none';
+    }
+
+    modal.classList.add('show');
+  }
+
+  function hideModal() {
+    if (modal) modal.classList.remove('show');
+  }
+
+  function submitForm() {
+    hideModal();
+    form.submit();
+  }
+
+  if (statusSelect) {
+    function syncCompletionCheckbox() {
+      if (!completionCheckbox) return;
+      if (statusSelect.value === 'completed') {
+        completionCheckbox.checked = true;
+        completionCheckbox.disabled = false;
+      } else {
+        completionCheckbox.checked = false;
+        completionCheckbox.disabled = true;
+      }
+    }
+
+    function syncStatusNotifyBlocks() {
+      var blocks = form.querySelectorAll('.status-notify');
+      blocks.forEach(function(block) {
+        var expected = block.getAttribute('data-status');
+        if (expected && statusSelect.value === expected) {
+          block.style.display = '';
+        } else {
+          block.style.display = 'none';
+        }
+      });
+    }
+
+    statusSelect.addEventListener('change', function() {
+      syncCompletionCheckbox();
+      syncStatusNotifyBlocks();
+    });
+
+    syncCompletionCheckbox();
+    syncStatusNotifyBlocks();
+  }
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    showModal();
+  });
+
+  if (btnConfirm) {
+    btnConfirm.addEventListener('click', submitForm);
+  }
+  if (btnCancel) {
+    btnCancel.addEventListener('click', hideModal);
+  }
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) hideModal();
+    });
+  }
+})();
+</script>
+{% endblock %}

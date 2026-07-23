@@ -1,0 +1,13 @@
+New Bespoke Request
+══════════════════════════════════════
+
+From: {{ request.name }}
+Email: {{ request.email }}
+Phone: {{ request.phone }}
+
+Garment: {{ request.garment_type|default:"Custom Design" }}
+Fabrics: {{ request.fabrics|default:"Not specified" }}
+Status: {{ request.get_status_display }}
+
+View in Admin:
+{{ admin_url }}

@@ -1,0 +1,20 @@
+TSP Couture — Order Status Update
+══════════════════════════════════════
+
+Dear {{ request.name }},
+
+Your bespoke order status has been updated to Cancelled. We understand this may be disappointing, and we want to ensure this decision was intentional on your part. If this was done in error or you have any questions, please contact us immediately.
+
+Order Status: Cancelled
+Garment: {{ request.garment_type|default:"Custom Design" }}
+
+──────────────────────────────────────────────
+
+Need to Discuss?
+
+1. If you did not request this cancellation, please reply to this email or call us immediately.
+2. If you would like to restart your order, we are happy to assist you.
+3. For any questions about refunds or deposits, contact our studio team.
+
+— The TSP Couture Atelier Team
+New York · London · Lagos

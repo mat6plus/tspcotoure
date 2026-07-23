@@ -1,0 +1,174 @@
+{% extends 'cms_admin/base.html' %}
+{% block title %}{% if is_edit %}Edit {{ testimonial.author_name }}{% else %}New Testimonial{% endif %}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(145,67,37,0.10),transparent_34%),linear-gradient(135deg,#fbf9f8_0%,#f4eee9_100%)] px-8 py-8">
+  <div class="mb-8 max-w-5xl">
+    <a href="{% url 'cms-admin:testimonial_list' %}" class="btn-ghost mb-4 flex w-fit items-center gap-1 px-0 text-sm no-underline">
+      <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">arrow_back</span>
+      Back to Testimonials
+    </a>
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div>
+        <div class="mb-3 flex flex-wrap items-center gap-2">
+          <span class="rounded-full bg-[#fff7f3] px-3 py-1 text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.16em] text-[#914325]">Client Voice</span>
+          <span class="rounded-full border border-[#e4e2e1] bg-white/80 px-3 py-1 text-xs font-medium text-[#88726c]">{% if is_edit %}Editing record{% else %}New record{% endif %}</span>
+        </div>
+        <h1 class="font-[Playfair_Display] text-4xl font-semibold text-[#1b1c1c]">{% if is_edit %}Edit Testimonial{% else %}New Testimonial{% endif %}</h1>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-[#55433d]">Capture the client’s voice, location, and publication state for polished social proof across TSP Couture.</p>
+      </div>
+      <div class="inline-flex items-center gap-2 rounded-full bg-[#fff4f0] px-4 py-2 text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.14em] text-[#914325]">
+        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">format_quote</span>
+        Testimonial Editor
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+    <div class="card p-6 lg:p-8">
+      <form method="post" class="space-y-8">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="rounded-xl border border-[#ffdad6] bg-[#fff4f0] px-4 py-3 text-sm text-[#93000a]">
+          {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+        {% endif %}
+
+        <section>
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">person</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Author details</h2>
+              <p class="text-xs font-medium text-[#88726c]">Who is speaking, and where are they based?</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label for="{{ form.author_name.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Author Name *</label>
+              {{ form.author_name }}
+              {% if form.author_name.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.author_name.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+              <label for="{{ form.author_location.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Location</label>
+              {{ form.author_location }}
+              {% if form.author_location.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.author_location.errors.0 }}</p>{% endif %}
+            </div>
+          </div>
+        </section>
+
+        <section class="border-t border-[#e4e2e1] pt-8">
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">format_quote</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Quote</h2>
+              <p class="text-xs font-medium text-[#88726c]">The polished testimonial text customers will see.</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="{{ form.text.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Testimonial Text *</label>
+            {{ form.text }}
+            {% if form.text.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.text.errors.0 }}</p>{% endif %}
+          </div>
+        </section>
+
+        <section class="border-t border-[#e4e2e1] pt-8">
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">sort</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Display control</h2>
+              <p class="text-xs font-medium text-[#88726c]">Set order and visibility for storefront placement.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label for="{{ form.sort_order.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Sort Order</label>
+              {{ form.sort_order }}
+              {% if form.sort_order.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.sort_order.errors.0 }}</p>{% endif %}
+              <p class="mt-2 text-xs leading-5 text-[#88726c]">Lower numbers appear earlier.</p>
+            </div>
+
+            <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-[#e4e2e1] bg-[#f6f3f2] p-4 transition hover:border-[#914325]/50">
+              {{ form.is_published }}
+              <span class="mt-0.5">
+                <span class="block text-sm font-medium text-[#1b1c1c]">Published</span>
+                <span class="mt-1 block text-xs leading-5 text-[#88726c]">Visible to customers on the public site.</span>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <div class="flex flex-col gap-3 border-t border-[#e4e2e1] pt-8 sm:flex-row sm:items-center">
+          <button type="submit" class="btn-primary inline-flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">{% if is_edit %}save{% else %}add_circle{% endif %}</span>
+            {% if is_edit %}Save Changes{% else %}Create Testimonial{% endif %}
+          </button>
+          <a href="{% url 'cms-admin:testimonial_list' %}" class="btn-secondary inline-flex items-center justify-center no-underline">Cancel</a>
+        </div>
+      </form>
+    </div>
+
+    <aside class="space-y-6">
+      <div class="card overflow-hidden">
+        <div class="border-b border-[#e4e2e1] bg-[#f6f3f2] px-6 py-4">
+          <div class="font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.14em] text-[#88726c]">Live Preview</div>
+          <div class="mt-1 text-sm text-[#55433d]">How the testimonial card may read.</div>
+        </div>
+        <div class="p-6">
+          <div class="rounded-2xl bg-[#fff7f3] p-6 ring-1 ring-[#e4e2e1]">
+            <span class="material-symbols-outlined text-[32px] text-[#914325]" style="font-variation-settings:'wght'300">format_quote</span>
+            <blockquote id="testimonialPreviewText" class="mt-4 font-[Playfair_Display] text-2xl font-semibold leading-snug text-[#1b1c1c]">
+              “Your testimonial text will appear here.”
+            </blockquote>
+            <div class="mt-6 flex items-center gap-3">
+              <div id="testimonialInitial" class="flex h-11 w-11 items-center justify-center rounded-full bg-[#914325] text-sm font-semibold text-white">R</div>
+              <div>
+                <div id="testimonialPreviewName" class="font-semibold text-[#1b1c1c]">Client Name</div>
+                <div id="testimonialPreviewLocation" class="text-xs text-[#88726c]">Location</div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 rounded-xl border border-dashed border-[#dcd9d9] bg-[#fbf9f8] p-4 text-xs leading-5 text-[#88726c]">
+            Use concise, specific praise that reflects TSP Couture’s bespoke process and customer confidence.
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const authorInput = document.getElementById('{{ form.author_name.id_for_label }}');
+  const locationInput = document.getElementById('{{ form.author_location.id_for_label }}');
+  const textInput = document.getElementById('{{ form.text.id_for_label }}');
+  const previewName = document.getElementById('testimonialPreviewName');
+  const previewLocation = document.getElementById('testimonialPreviewLocation');
+  const previewText = document.getElementById('testimonialPreviewText');
+  const previewInitial = document.getElementById('testimonialInitial');
+
+  function updateTestimonialPreview() {
+    const name = authorInput.value.trim() || 'Client Name';
+    const location = locationInput.value.trim() || 'Location';
+    const text = textInput.value.trim() || 'Your testimonial text will appear here.';
+    previewName.textContent = name;
+    previewLocation.textContent = location;
+    previewText.textContent = '“' + (text.length > 110 ? text.slice(0, 110) + '…' : text) + '”';
+    previewInitial.textContent = name.charAt(0).toUpperCase();
+  }
+
+  [authorInput, locationInput, textInput].forEach(input => input.addEventListener('input', updateTestimonialPreview));
+  updateTestimonialPreview();
+</script>
+{% endblock %}

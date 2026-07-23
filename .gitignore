@@ -1,0 +1,132 @@
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+env/
+.venv/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.manifest
+*.spec
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+local_settings.py
+/staticfiles/
+/media/
+*.log
+/static/
+staticfiles/
+
+# Node / Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+.metadata/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Thumbs.db:encryptable
+Desktop.ini
+$RECYCLE.BIN/
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Docker
+docker-compose.override.yml
+.docker/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+test-results/
+
+# Playwright
+.playwright-mcp/
+
+# Kilo
+.kilo/
+
+# Project docs / non-production config
+AGENTS.md
+DESIGN.md
+DEVELOPER_README.md
+m.md
+.env.example
+
+# Misc
+*.bak
+*.tmp
+*.temp
+.cache/
+.eggs/
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg
+*.egg-info/
+.installed.cfg
+*.manifest
+*.spec
+
+# Backup files
+*.orig
+*.rej
+
+# Secrets / Keys
+*.pem
+*.key
+*.p12
+*.pfx
+*.asc
+id_rsa
+id_ed25519

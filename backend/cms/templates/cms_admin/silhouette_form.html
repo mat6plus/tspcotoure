@@ -1,0 +1,206 @@
+{% extends 'cms_admin/base.html' %}
+{% block title %}{% if is_edit %}Edit {{ silhouette.name }}{% else %}New Silhouette{% endif %}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(145,67,37,0.10),transparent_34%),linear-gradient(135deg,#fbf9f8_0%,#f4eee9_100%)] px-8 py-8">
+  <div class="mb-8 max-w-5xl">
+    <a href="{% url 'cms-admin:silhouette_list' %}" class="btn-ghost mb-4 flex w-fit items-center gap-1 px-0 text-sm no-underline">
+      <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">arrow_back</span>
+      Back to Silhouettes
+    </a>
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div>
+        <div class="mb-3 flex flex-wrap items-center gap-2">
+          <span class="rounded-full bg-[#fff7f3] px-3 py-1 text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.16em] text-[#914325]">Custom Order Step 2</span>
+          <span class="rounded-full border border-[#e4e2e1] bg-white/80 px-3 py-1 text-xs font-medium text-[#88726c]">Style & Silhouette</span>
+        </div>
+        <h1 class="font-[Playfair_Display] text-4xl font-semibold text-[#1b1c1c]">{% if is_edit %}Edit Silhouette{% else %}New Silhouette{% endif %}</h1>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-[#55433d]">Create the style cards customers use to describe their desired garment shape and aesthetic direction.</p>
+      </div>
+      <div class="inline-flex items-center gap-2 rounded-full bg-[#fff4f0] px-4 py-2 text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.14em] text-[#914325]">
+        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">style</span>
+        Style Card Editor
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+    <div class="card p-6 lg:p-8">
+      <form method="post" enctype="multipart/form-data" class="space-y-8">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        <div class="rounded-xl border border-[#ffdad6] bg-[#fff4f0] px-4 py-3 text-sm text-[#93000a]">
+          {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+        {% endif %}
+
+        <section>
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">info</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Silhouette details</h2>
+              <p class="text-xs font-medium text-[#88726c]">Internal name and short display label for the customer-facing card.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label for="{{ form.name.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Silhouette Name *</label>
+              {{ form.name }}
+              {% if form.name.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.name.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+              <label for="{{ form.label.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Display Label *</label>
+              {{ form.label }}
+              {% if form.label.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.label.errors.0 }}</p>{% endif %}
+            </div>
+          </div>
+        </section>
+
+        <section class="border-t border-[#e4e2e1] pt-8">
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">image</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Card image</h2>
+              <p class="text-xs font-medium text-[#88726c]">Use a refined garment photo or leave blank for icon-only custom vision cards.</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="{{ form.image.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Silhouette Photo</label>
+            {{ form.image }}
+            {% if form.image.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.image.errors.0 }}</p>{% endif %}
+            <div class="mt-3 flex items-center gap-3">
+              <img id="silhouettePreviewImage" src="{% if is_edit and silhouette.image %}{{ silhouette.image.url }}{% endif %}" alt="Silhouette preview" class="h-20 w-16 rounded-xl object-cover bg-[#f0eded] ring-1 ring-[#e4e2e1] {% if not is_edit or not silhouette.image %}hidden{% endif %}">
+              <div id="silhouettePreviewPlaceholder" class="flex h-20 w-16 items-center justify-center rounded-xl bg-[#f0eded] ring-1 ring-[#e4e2e1] {% if is_edit and silhouette.image %}hidden{% endif %}">
+                <span class="material-symbols-outlined text-[24px] text-[#88726c]" style="font-variation-settings:'wght'300">checkroom</span>
+              </div>
+              <span class="text-xs leading-5 text-[#88726c]">Upload a new file to replace the current photo. Custom Vision cards can remain image-free.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="border-t border-[#e4e2e1] pt-8">
+          <div class="mb-5 flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff4f0] text-[#914325]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'wght'300">visibility</span>
+            </div>
+            <div>
+              <h2 class="font-[Playfair_Display] text-2xl font-semibold text-[#1b1c1c]">Display options</h2>
+              <p class="text-xs font-medium text-[#88726c]">Control order, publication, and custom-vision behavior.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div>
+              <label for="{{ form.sort_order.id_for_label }}" class="mb-2 block font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.12em] text-[#55433d]">Sort Order</label>
+              {{ form.sort_order }}
+              {% if form.sort_order.errors %}<p class="mt-1 text-xs text-[#ba1a1a]">{{ form.sort_order.errors.0 }}</p>{% endif %}
+              <p class="mt-2 text-xs leading-5 text-[#88726c]">Lower numbers appear first.</p>
+            </div>
+
+            <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-[#e4e2e1] bg-[#f6f3f2] p-4 transition hover:border-[#914325]/50">
+              {{ form.is_published }}
+              <span class="mt-0.5">
+                <span class="block text-sm font-medium text-[#1b1c1c]">Published</span>
+                <span class="mt-1 block text-xs leading-5 text-[#88726c]">Visible in the custom-order form.</span>
+              </span>
+            </label>
+
+            <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-[#e4e2e1] bg-[#f6f3f2] p-4 transition hover:border-[#966b00]/50">
+              {{ form.is_custom_vision }}
+              <span class="mt-0.5">
+                <span class="block text-sm font-medium text-[#1b1c1c]">Custom Vision card</span>
+                <span class="mt-1 block text-xs leading-5 text-[#88726c]">Uses an icon-only card for bespoke direction.</span>
+              </span>
+            </label>
+          </div>
+          <p class="mt-4 rounded-xl border border-dashed border-[#dcd9d9] bg-[#fbf9f8] p-4 text-xs leading-5 text-[#88726c]">
+            Use Custom Vision for an “Other / Bespoke” option when customers want to describe a style that is not already listed.
+          </p>
+        </section>
+
+        <div class="flex flex-col gap-3 border-t border-[#e4e2e1] pt-8 sm:flex-row sm:items-center">
+          <button type="submit" class="btn-primary inline-flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">{% if is_edit %}save{% else %}add_circle{% endif %}</span>
+            {% if is_edit %}Save Changes{% else %}Create Silhouette{% endif %}
+          </button>
+          <a href="{% url 'cms-admin:silhouette_list' %}" class="btn-secondary inline-flex items-center justify-center no-underline">Cancel</a>
+        </div>
+      </form>
+    </div>
+
+    <aside class="space-y-6">
+      <div class="card overflow-hidden">
+        <div class="border-b border-[#e4e2e1] bg-[#f6f3f2] px-6 py-4">
+          <div class="font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.14em] text-[#88726c]">Card Preview</div>
+          <div class="mt-1 text-sm text-[#55433d]">Approximate storefront appearance.</div>
+        </div>
+        <div class="p-6">
+          <div id="silhouetteCardPreview" class="group min-h-[280px] overflow-hidden rounded-2xl bg-[#f6f3f2] p-4 ring-1 ring-[#e4e2e1] transition hover:-translate-y-1 hover:shadow-xl">
+            <div id="silhouetteCardMedia" class="relative flex h-48 items-center justify-center overflow-hidden rounded-xl bg-[#fff7f3]">
+              <img id="silhouetteCardImage" src="{% if is_edit and silhouette.image %}{{ silhouette.image.url }}{% endif %}" alt="Preview image" class="h-full w-full object-cover {% if not is_edit or not silhouette.image %}hidden{% endif %}">
+              <div id="silhouetteCardIcon" class="{% if is_edit and silhouette.image %}hidden{% endif %}">
+                <span class="material-symbols-outlined text-[48px] text-[#914325]" style="font-variation-settings:'wght'300">checkroom</span>
+              </div>
+            </div>
+            <div class="mt-4">
+              <div id="silhouetteCardLabel" class="font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.14em] text-[#914325]">Short label</div>
+              <div id="silhouetteCardName" class="mt-2 font-[Playfair_Display] text-2xl font-semibold leading-tight text-[#1b1c1c]">Silhouette Name</div>
+            </div>
+          </div>
+          <div class="mt-4 rounded-xl bg-[#fff4f0] p-4 text-xs leading-5 text-[#88726c] ring-1 ring-[#ffdad6]">
+            Keep labels short and recognisable. Customers scan these cards quickly while building their order.
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const silhouetteNameInput = document.getElementById('{{ form.name.id_for_label }}');
+  const silhouetteLabelInput = document.getElementById('{{ form.label.id_for_label }}');
+  const silhouetteImageInput = document.getElementById('{{ form.image.id_for_label }}');
+  const silhouettePreviewImage = document.getElementById('silhouettePreviewImage');
+  const silhouettePreviewPlaceholder = document.getElementById('silhouettePreviewPlaceholder');
+  const silhouetteCardPreview = document.getElementById('silhouetteCardPreview');
+  const silhouetteCardMedia = document.getElementById('silhouetteCardMedia');
+  const silhouetteCardImage = document.getElementById('silhouetteCardImage');
+  const silhouetteCardIcon = document.getElementById('silhouetteCardIcon');
+  const silhouetteCardLabel = document.getElementById('silhouetteCardLabel');
+  const silhouetteCardName = document.getElementById('silhouetteCardName');
+
+  function updateSilhouettePreview() {
+    const name = silhouetteNameInput.value.trim() || 'Silhouette Name';
+    const label = silhouetteLabelInput.value.trim() || 'Short label';
+    silhouetteCardName.textContent = name;
+    silhouetteCardLabel.textContent = label;
+
+    const file = silhouetteImageInput.files && silhouetteImageInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        silhouettePreviewImage.src = reader.result;
+        silhouettePreviewImage.classList.remove('hidden');
+        silhouettePreviewPlaceholder.classList.add('hidden');
+        silhouetteCardImage.src = reader.result;
+        silhouetteCardImage.classList.remove('hidden');
+        silhouetteCardIcon.classList.add('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  [silhouetteNameInput, silhouetteLabelInput].forEach(input => input.addEventListener('input', updateSilhouettePreview));
+  silhouetteImageInput.addEventListener('change', updateSilhouettePreview);
+  updateSilhouettePreview();
+</script>
+{% endblock %}

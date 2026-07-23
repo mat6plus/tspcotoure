@@ -1,0 +1,227 @@
+{% extends 'cms_admin/base.html' %}
+{% block title %}Fabric Swatches{% endblock %}
+
+{% block content %}
+<div class="relative min-h-screen overflow-hidden bg-[#fbf9f8]">
+  <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(145,67,37,0.10),transparent_34%),linear-gradient(135deg,rgba(255,255,255,0.72),rgba(246,243,242,0.94))]"></div>
+  <div class="pointer-events-none absolute inset-0 opacity-[0.18]" style="background-image:linear-gradient(rgba(145,67,37,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(145,67,37,0.08) 1px,transparent 1px);background-size:48px 48px"></div>
+
+  <div class="relative px-8 py-8">
+    <div class="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <div>
+        <div class="mb-3 flex flex-wrap items-center gap-2">
+          <span class="rounded-full bg-[#fff7f3] px-3 py-1 text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.16em] text-[#914325]">Custom Order Step 4</span>
+          <span class="rounded-full border border-[#e4e2e1] bg-white/80 px-3 py-1 text-xs font-medium text-[#88726c]">{{ total_swatches }} fabric{{ total_swatches|pluralize }} available</span>
+        </div>
+        <h1 class="font-[Playfair_Display] text-4xl font-semibold text-[#1b1c1c]">Fabric Swatches</h1>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-[#55433d]">Curate the fabric choices customers select in Custom Order Step 4 — Fabric Selection.</p>
+      </div>
+      {% if cms_can_manage_cms_content %}
+      <a href="{% url 'cms-admin:swatch_create' %}" class="btn-primary no-underline inline-flex items-center gap-2 text-sm">
+        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">add</span>
+        Add Swatch
+      </a>
+      {% endif %}
+    </div>
+
+    <div class="mb-6 grid gap-4 sm:grid-cols-3">
+      <div class="card border border-[#e4e2e1] p-5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.12em] text-[#88726c]">Fabric Library</span>
+          <span class="material-symbols-outlined text-[18px] text-[#914325]" style="font-variation-settings:'wght'300">palette</span>
+        </div>
+        <div class="mt-4 font-[Playfair_Display] text-4xl font-semibold text-[#1b1c1c]">{{ total_swatches }}</div>
+        <div class="mt-1 text-xs text-[#88726c]">All fabric records</div>
+      </div>
+      <div class="card border border-[#e4e2e1] p-5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.12em] text-[#88726c]">Published</span>
+          <span class="material-symbols-outlined text-[18px] text-[#065f46]" style="font-variation-settings:'wght'300">visibility</span>
+        </div>
+        <div class="mt-4 font-[Playfair_Display] text-4xl font-semibold text-[#065f46]">{{ published_swatches }}</div>
+        <div class="mt-1 text-xs text-[#88726c]">Visible to customers</div>
+      </div>
+      <div class="card border border-[#e4e2e1] p-5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-[Space_Grotesk] font-semibold uppercase tracking-[0.12em] text-[#88726c]">Hidden</span>
+          <span class="material-symbols-outlined text-[18px] text-[#88726c]" style="font-variation-settings:'wght'300">visibility_off</span>
+        </div>
+        <div class="mt-4 font-[Playfair_Display] text-4xl font-semibold text-[#88726c]">{{ hidden_swatches }}</div>
+        <div class="mt-1 text-xs text-[#88726c]">Not shown in order form</div>
+      </div>
+    </div>
+
+    <div class="card overflow-hidden border border-[#e4e2e1]">
+      {% if swatches %}
+      <div class="overflow-x-auto" style="scrollbar-gutter: stable">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-[#e4e2e1] bg-[#f6f3f2]">
+              <th class="px-6 py-3 text-left font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.1em] text-[#88726c]">Fabric</th>
+              <th class="px-6 py-3 text-left font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.1em] text-[#88726c]">Colour</th>
+              <th class="px-6 py-3 text-left font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.1em] text-[#88726c]">Texture</th>
+              <th class="px-6 py-3 text-left font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.1em] text-[#88726c]">Status</th>
+              <th class="px-6 py-3 text-left font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.1em] text-[#88726c]">Order</th>
+              <th class="px-6 py-3 text-right font-[Space_Grotesk] text-xs font-semibold uppercase tracking-[0.1em] text-[#88726c]">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in swatches %}
+            <tr class="border-b border-[#f0eded] transition hover:bg-[#fbf9f8]">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  {% if f.image %}
+                  <img src="{{ f.image.url }}" alt="{{ f.name }}" class="h-12 w-12 shrink-0 rounded-xl object-cover bg-[#f0eded] ring-1 ring-[#e4e2e1]">
+                  {% else %}
+                  <span class="h-12 w-12 shrink-0 rounded-xl ring-1 ring-[#e4e2e1]" style="background:{{ f.color_hex }};"></span>
+                  {% endif %}
+                  <div>
+                    <div class="font-semibold text-[#1b1c1c]">{{ f.name }}</div>
+                    <div class="mt-0.5 text-xs text-[#88726c]">Swatch #{{ f.pk }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <span class="h-5 w-5 rounded-full ring-1 ring-[#e4e2e1]" style="background:{{ f.color_hex }};"></span>
+                  <span class="font-mono text-xs text-[#55433d]">{{ f.color_hex }}</span>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                {% if f.texture_css %}
+                <span class="inline-flex items-center gap-1 rounded-full bg-[#fff4f0] px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#914325]">
+                  <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'wght'300">texture</span>Custom
+                </span>
+                {% else %}
+                <span class="inline-flex items-center gap-1 rounded-full bg-[#e4e2e1] px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#55433d]">
+                  <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'wght'300">colorize</span>Solid
+                </span>
+                {% endif %}
+              </td>
+              <td class="px-6 py-4">
+                {% if f.is_published %}
+                <span class="inline-flex items-center gap-1 rounded-full bg-[#d1fae5] px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#065f46]">
+                  <span class="h-1.5 w-1.5 rounded-full bg-[#065f46]"></span>Published
+                </span>
+                {% else %}
+                <span class="inline-flex items-center gap-1 rounded-full bg-[#e4e2e1] px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#55433d]">
+                  <span class="h-1.5 w-1.5 rounded-full bg-[#88726c]"></span>Hidden
+                </span>
+                {% endif %}
+              </td>
+              <td class="px-6 py-4 text-[#88726c]">{{ f.sort_order }}</td>
+              <td class="px-6 py-4">
+                <div class="flex items-center justify-end gap-2">
+                  {% if cms_can_manage_cms_content %}
+                  <a href="{% url 'cms-admin:swatch_edit' f.pk %}" class="btn-ghost no-underline inline-flex items-center gap-1 text-sm">
+                    <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">edit</span>
+                      Edit
+                    </a>
+                    {% endif %}
+                    {% if cms_can_delete_cms_content %}
+                    <form method="post" action="{% url 'cms-admin:swatch_delete' f.pk %}" onsubmit="return confirm('Delete fabric swatch «{{ f.name }}»?')" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-ghost no-underline inline-flex items-center gap-1 text-sm text-[#ba1a1a] hover:bg-[#ffdad6]">
+                      <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">delete</span>
+                        Delete
+                      </button>
+                    </form>
+                    {% endif %}
+                  </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if swatches.has_other_pages %}
+      <div class="flex flex-col gap-4 border-t border-[#e4e2e1] bg-[#fbf9f8] p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-[#55433d]">
+          <div class="flex items-center gap-2">
+            <span>Show</span>
+            <select onchange="changePerPage(this)" class="rounded-lg border border-[#e4e2e1] bg-white px-2 py-1 text-xs font-semibold text-[#1b1c1c] focus:border-[#914325]">
+              <option value="5" {% if per_page == '5' %}selected{% endif %}>5</option>
+              <option value="10" {% if per_page == '10' or not per_page %}selected{% endif %}>10</option>
+              <option value="25" {% if per_page == '25' %}selected{% endif %}>25</option>
+              <option value="50" {% if per_page == '50' %}selected{% endif %}>50</option>
+            </select>
+            <span>entries</span>
+          </div>
+          <span class="text-[#88726c]">Showing {{ swatches.start_index }} to {{ swatches.end_index }} of {{ swatches.paginator.count }} entries</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          {% if swatches.has_previous %}
+          <a href="?per_page={{ per_page }}&page={{ swatches.previous_page_number }}" class="flex items-center gap-0.5 rounded-lg border border-[#e4e2e1] bg-white px-3 py-1.5 text-xs font-semibold text-[#55433d] no-underline transition hover:bg-[#f6f3f2]">
+            <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'wght'300">chevron_left</span>Prev
+          </a>
+          {% else %}
+          <span class="flex cursor-not-allowed items-center gap-0.5 rounded-lg border border-[#e4e2e1] bg-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-400">
+            <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'wght'300">chevron_left</span>Prev
+          </span>
+          {% endif %}
+          {% for num in swatches.paginator.page_range %}
+          {% if swatches.number == num %}
+          <span class="rounded-lg bg-[#914325] px-3 py-1.5 text-xs font-bold text-white">{{ num }}</span>
+          {% elif num > swatches.number|add:'-3' and num < swatches.number|add:'3' %}
+          <a href="?per_page={{ per_page }}&page={{ num }}" class="rounded-lg border border-[#e4e2e1] bg-white px-3 py-1.5 text-xs font-semibold text-[#55433d] no-underline transition hover:bg-[#f6f3f2]">{{ num }}</a>
+          {% endif %}
+          {% endfor %}
+          {% if swatches.has_next %}
+          <a href="?per_page={{ per_page }}&page={{ swatches.next_page_number }}" class="flex items-center gap-0.5 rounded-lg border border-[#e4e2e1] bg-white px-3 py-1.5 text-xs font-semibold text-[#55433d] no-underline transition hover:bg-[#f6f3f2]">
+            Next<span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'wght'300">chevron_right</span>
+          </a>
+          {% else %}
+          <span class="flex cursor-not-allowed items-center gap-0.5 rounded-lg border border-[#e4e2e1] bg-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-400">
+            Next<span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'wght'300">chevron_right</span>
+          </span>
+          {% endif %}
+        </div>
+      </div>
+      {% elif swatches %}
+      <div class="flex flex-col gap-4 border-t border-[#e4e2e1] bg-[#fbf9f8] p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-[#55433d]">
+          <div class="flex items-center gap-2">
+            <span>Show</span>
+            <select onchange="changePerPage(this)" class="rounded-lg border border-[#e4e2e1] bg-white px-2 py-1 text-xs font-semibold text-[#1b1c1c] focus:border-[#914325]">
+              <option value="5" {% if per_page == '5' %}selected{% endif %}>5</option>
+              <option value="10" {% if per_page == '10' or not per_page %}selected{% endif %}>10</option>
+              <option value="25" {% if per_page == '25' %}selected{% endif %}>25</option>
+              <option value="50" {% if per_page == '50' %}selected{% endif %}>50</option>
+            </select>
+            <span>entries</span>
+          </div>
+          <span class="text-[#88726c]">Showing all {{ swatches.paginator.count }} entries</span>
+        </div>
+      </div>
+      {% endif %}
+      {% else %}
+      <div class="py-16 text-center text-[#88726c]">
+        <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#fff7f3] text-[#914325]">
+          <span class="material-symbols-outlined text-4xl" style="font-variation-settings:'wght'300">palette</span>
+        </div>
+        <p class="text-sm font-semibold text-[#1b1c1c]">No fabric swatches yet</p>
+        <p class="mt-1 text-xs">Add the first fabric option for the custom-order flow.</p>
+        {% if cms_can_manage_cms_content %}
+        <a href="{% url 'cms-admin:swatch_create' %}" class="btn-primary no-underline mt-4 inline-flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">add</span>
+          Add First Swatch
+        </a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% block extra_scripts %}
+<script>
+  function changePerPage(select) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('per_page', select.value);
+    url.searchParams.set('page', '1');
+    window.location.href = url.pathname + url.search;
+  }
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'cms_admin/base.html' %}
+{% load cms_admin_tags %}
+{% block title %}CMS Team{% endblock %}
+
+{% block content %}
+<div class="reveal">
+  <div class="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+    <div>
+      <div class="mb-3 inline-flex items-center gap-2 rounded-full border border-[#e4e2e1] bg-white/78 px-3 py-1.5 text-xs font-[Space_Grotesk] font-bold tracking-[0.16em] text-[#914325]">
+        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'wght'300">groups</span>
+        CMS ACCESS
+      </div>
+      <h1 class="font-[Playfair_Display] text-4xl font-semibold leading-tight text-[#1b1c1c] sm:text-5xl">CMS Team</h1>
+      <p class="mt-4 max-w-2xl text-base leading-7 text-[#55433d]">
+        Manage CMS roles, active status, and temporary passwords without granting unnecessary Django admin access.
+      </p>
+    </div>
+    <a href="{% url 'cms-admin:team_create' %}" class="btn-primary">
+      <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'wght'300">person_add</span>
+      Add CMS User
+    </a>
+  </div>
+
+  <div class="admin-card overflow-hidden">
+    <div class="overflow-x-auto" style="scrollbar-gutter: stable">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>CMS Groups</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td>
+              <div class="font-bold text-[#1b1c1c]">{{ user.get_full_name|default:user.username }}</div>
+              <div class="mt-1 text-xs text-[#88726c]">{{ user.username }} · {{ user.email }}</div>
+            </td>
+            <td>
+              {% if user.is_superuser %}
+              <span class="status-badge status-in_progress">Superuser</span>
+              {% elif user|cms_role_slug_for == 'admin' %}
+              <span class="status-badge status-in_progress">CMS Admin</span>
+              {% elif user|cms_role_slug_for == 'supervisor' %}
+              <span class="status-badge status-in_progress">Supervisor</span>
+              {% elif user|cms_role_slug_for == 'designer' %}
+              <span class="status-badge status-draft">Fashion Designer</span>
+              {% else %}
+              <span class="status-badge status-draft">Staff</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if user.is_active %}
+              <span class="inline-flex items-center gap-1 rounded-full bg-[#d1fae5] px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#065f46]">
+                <span class="h-1.5 w-1.5 rounded-full bg-[#065f46]"></span>Active
+              </span>
+              {% else %}
+              <span class="inline-flex items-center gap-1 rounded-full bg-[#e4e2e1] px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#55433d]">
+                <span class="h-1.5 w-1.5 rounded-full bg-[#88726c]"></span>Inactive
+              </span>
+              {% endif %}
+            </td>
+            <td class="text-sm text-[#55433d]">
+              {% for group in user.groups.all %}
+              <span class="mr-1 rounded-full bg-[#f0eded] px-2 py-1 text-[10px] font-[Space_Grotesk] font-bold uppercase tracking-[0.08em] text-[#55433d]">{{ group.name }}</span>
+              {% empty %}
+              <span class="text-[#88726c]">No CMS role</span>
+              {% endfor %}
+            </td>
+            <td class="text-right">
+              <div class="flex items-center justify-end gap-2">
+                {% if not user.is_superuser %}
+                <a href="{% url 'cms-admin:team_edit' user.pk %}" class="btn-ghost inline-flex text-sm">Edit</a>
+                <a href="{% url 'cms-admin:team_password' user.pk %}" class="btn-ghost inline-flex text-sm">Password</a>
+                <form method="post" action="{% url 'cms-admin:team_toggle_active' user.pk %}" class="inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-ghost inline-flex text-sm {% if user.is_active %}text-[#ba1a1a]{% endif %}">
+                    {% if user.is_active %}Deactivate{% else %}Activate{% endif %}
+                  </button>
+                </form>
+                {% else %}
+                <span class="text-xs text-[#88726c]">Managed outside CMS</span>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
