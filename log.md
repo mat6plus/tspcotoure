@@ -1,99 +1,99 @@
-2026-07-24T01:10:18.072Z PostgreSQL is ready
-2026-07-24T01:10:18.072Z Running database migrations...
-2026-07-24T01:10:18.605Z Operations to perform:
-2026-07-24T01:10:18.605Z Apply all migrations: admin, auth, cms, contenttypes, sessions
-2026-07-24T01:10:18.605Z Running migrations:
-2026-07-24T01:10:18.605Z No migrations to apply.
-2026-07-24T01:10:18.724Z Starting services...
-2026-07-24T01:10:18.857Z [2026-07-24 01:10:18 +0000] [1] [INFO] Starting gunicorn 26.0.0
-2026-07-24T01:10:18.858Z [2026-07-24 01:10:18 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:18.858Z [2026-07-24 01:10:18 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:19.859Z [2026-07-24 01:10:19 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:19.859Z [2026-07-24 01:10:19 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:20.859Z [2026-07-24 01:10:20 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:20.859Z [2026-07-24 01:10:20 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:21.860Z [2026-07-24 01:10:21 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:21.860Z [2026-07-24 01:10:21 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:22.861Z [2026-07-24 01:10:22 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:22.861Z [2026-07-24 01:10:22 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:23.862Z [2026-07-24 01:10:23 +0000] [1] [ERROR] Can't connect to ('127.0.0.1', 8000)
-2026-07-24T01:10:26.137Z Waiting for PostgreSQL...
-2026-07-24T01:10:26.302Z PostgreSQL is ready
-2026-07-24T01:10:26.302Z Running database migrations...
-2026-07-24T01:10:26.902Z Operations to perform:
-2026-07-24T01:10:26.902Z Apply all migrations: admin, auth, cms, contenttypes, sessions
-2026-07-24T01:10:26.902Z Running migrations:
-2026-07-24T01:10:26.902Z No migrations to apply.
-2026-07-24T01:10:27.008Z Starting services...
-2026-07-24T01:10:27.140Z [2026-07-24 01:10:27 +0000] [1] [INFO] Starting gunicorn 26.0.0
-2026-07-24T01:10:27.140Z [2026-07-24 01:10:27 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:27.140Z [2026-07-24 01:10:27 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:28.141Z [2026-07-24 01:10:28 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:28.141Z [2026-07-24 01:10:28 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:29.142Z [2026-07-24 01:10:29 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:29.142Z [2026-07-24 01:10:29 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:30.142Z [2026-07-24 01:10:30 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:30.142Z [2026-07-24 01:10:30 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:31.145Z [2026-07-24 01:10:31 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:31.145Z [2026-07-24 01:10:31 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:32.145Z [2026-07-24 01:10:32 +0000] [1] [ERROR] Can't connect to ('127.0.0.1', 8000)
-2026-07-24T01:10:35.892Z Waiting for PostgreSQL...
-2026-07-24T01:10:36.042Z PostgreSQL is ready
-2026-07-24T01:10:36.042Z Running database migrations...
-2026-07-24T01:10:36.581Z Operations to perform:
-2026-07-24T01:10:36.581Z Apply all migrations: admin, auth, cms, contenttypes, sessions
-2026-07-24T01:10:36.581Z Running migrations:
-2026-07-24T01:10:36.581Z No migrations to apply.
-2026-07-24T01:10:36.682Z Starting services...
-2026-07-24T01:10:36.808Z [2026-07-24 01:10:36 +0000] [1] [INFO] Starting gunicorn 26.0.0
-2026-07-24T01:10:36.808Z [2026-07-24 01:10:36 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:36.808Z [2026-07-24 01:10:36 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:37.809Z [2026-07-24 01:10:37 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:37.809Z [2026-07-24 01:10:37 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:38.810Z [2026-07-24 01:10:38 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:38.810Z [2026-07-24 01:10:38 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:39.810Z [2026-07-24 01:10:39 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:39.810Z [2026-07-24 01:10:39 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:40.811Z [2026-07-24 01:10:40 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:40.811Z [2026-07-24 01:10:40 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:41.812Z [2026-07-24 01:10:41 +0000] [1] [ERROR] Can't connect to ('127.0.0.1', 8000)
-2026-07-24T01:10:48.966Z Waiting for PostgreSQL...
-2026-07-24T01:10:49.115Z PostgreSQL is ready
-2026-07-24T01:10:49.115Z Running database migrations...
-2026-07-24T01:10:49.637Z Operations to perform:
-2026-07-24T01:10:49.637Z Apply all migrations: admin, auth, cms, contenttypes, sessions
-2026-07-24T01:10:49.637Z Running migrations:
-2026-07-24T01:10:49.637Z No migrations to apply.
-2026-07-24T01:10:49.749Z Starting services...
-2026-07-24T01:10:49.871Z [2026-07-24 01:10:49 +0000] [1] [INFO] Starting gunicorn 26.0.0
-2026-07-24T01:10:49.872Z [2026-07-24 01:10:49 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:49.872Z [2026-07-24 01:10:49 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:50.873Z [2026-07-24 01:10:50 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:50.873Z [2026-07-24 01:10:50 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:51.873Z [2026-07-24 01:10:51 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:51.873Z [2026-07-24 01:10:51 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:52.874Z [2026-07-24 01:10:52 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:52.874Z [2026-07-24 01:10:52 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:53.875Z [2026-07-24 01:10:53 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:10:53.875Z [2026-07-24 01:10:53 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:10:54.876Z [2026-07-24 01:10:54 +0000] [1] [ERROR] Can't connect to ('127.0.0.1', 8000)
-2026-07-24T01:11:08.227Z Waiting for PostgreSQL...
-2026-07-24T01:11:08.474Z PostgreSQL is ready
-2026-07-24T01:11:08.474Z Running database migrations...
-2026-07-24T01:11:09.276Z Operations to perform:
-2026-07-24T01:11:09.276Z Apply all migrations: admin, auth, cms, contenttypes, sessions
-2026-07-24T01:11:09.276Z Running migrations:
-2026-07-24T01:11:09.276Z No migrations to apply.
-2026-07-24T01:11:09.388Z Starting services...
-2026-07-24T01:11:09.517Z [2026-07-24 01:11:09 +0000] [1] [INFO] Starting gunicorn 26.0.0
-2026-07-24T01:11:09.518Z [2026-07-24 01:11:09 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:11:09.518Z [2026-07-24 01:11:09 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:11:10.519Z [2026-07-24 01:11:10 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:11:10.519Z [2026-07-24 01:11:10 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:11:11.519Z [2026-07-24 01:11:11 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:11:11.519Z [2026-07-24 01:11:11 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:11:12.520Z [2026-07-24 01:11:12 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:11:12.520Z [2026-07-24 01:11:12 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:11:13.520Z [2026-07-24 01:11:13 +0000] [1] [ERROR] Connection in use: ('127.0.0.1', 8000)
-2026-07-24T01:11:13.521Z [2026-07-24 01:11:13 +0000] [1] [ERROR] connection to ('127.0.0.1', 8000) failed: [Errno 98] Address already in use
-2026-07-24T01:11:14.522Z [2026-07-24 01:11:14 +0000] [1] [ERROR] Can't connect to ('127.0.0.1', 8000)
+2026-07-24T01:13:10.201Z django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:10.217Z WARNING 2026-07-24 01:13:10,217 log Bad Request: /api/health/
+2026-07-24T01:13:10.218Z 127.0.0.1 - - [24/Jul/2026:01:13:10 +0000] "GET /api/health/ HTTP/1.0" 400 143 "-" "curl/8.14.1"
+2026-07-24T01:13:15.311Z ERROR 2026-07-24 01:13:15,310 exception Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:15.311Z Traceback (most recent call last):
+2026-07-24T01:13:15.311Z File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+2026-07-24T01:13:15.311Z response = get_response(request)
+2026-07-24T01:13:15.311Z ^^^^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:15.311Z File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 133, in __call__
+2026-07-24T01:13:15.311Z response = self.process_request(request)
+2026-07-24T01:13:15.311Z ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:15.311Z File "/usr/local/lib/python3.11/site-packages/django/middleware/security.py", line 28, in process_request
+2026-07-24T01:13:15.311Z host = self.redirect_host or request.get_host()
+2026-07-24T01:13:15.311Z ^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:15.311Z File "/usr/local/lib/python3.11/site-packages/django/http/request.py", line 151, in get_host
+2026-07-24T01:13:15.311Z raise DisallowedHost(msg)
+2026-07-24T01:13:15.311Z django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:15.311Z WARNING 2026-07-24 01:13:15,311 log Bad Request: /api/health/
+2026-07-24T01:13:15.312Z 127.0.0.1 - - [24/Jul/2026:01:13:15 +0000] "GET /api/health/ HTTP/1.0" 400 143 "-" "curl/8.14.1"
+2026-07-24T01:13:20.383Z ERROR 2026-07-24 01:13:20,382 exception Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:20.383Z Traceback (most recent call last):
+2026-07-24T01:13:20.383Z File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+2026-07-24T01:13:20.383Z response = get_response(request)
+2026-07-24T01:13:20.383Z ^^^^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:20.383Z File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 133, in __call__
+2026-07-24T01:13:20.383Z response = self.process_request(request)
+2026-07-24T01:13:20.383Z ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:20.383Z File "/usr/local/lib/python3.11/site-packages/django/middleware/security.py", line 28, in process_request
+2026-07-24T01:13:20.383Z host = self.redirect_host or request.get_host()
+2026-07-24T01:13:20.383Z ^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:20.383Z File "/usr/local/lib/python3.11/site-packages/django/http/request.py", line 151, in get_host
+2026-07-24T01:13:20.383Z raise DisallowedHost(msg)
+2026-07-24T01:13:20.383Z django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:20.384Z WARNING 2026-07-24 01:13:20,383 log Bad Request: /api/health/
+2026-07-24T01:13:20.384Z 127.0.0.1 - - [24/Jul/2026:01:13:20 +0000] "GET /api/health/ HTTP/1.0" 400 143 "-" "curl/8.14.1"
+2026-07-24T01:13:25.457Z ERROR 2026-07-24 01:13:25,457 exception Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:25.457Z Traceback (most recent call last):
+2026-07-24T01:13:25.457Z File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+2026-07-24T01:13:25.457Z response = get_response(request)
+2026-07-24T01:13:25.457Z ^^^^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:25.457Z File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 133, in __call__
+2026-07-24T01:13:25.457Z response = self.process_request(request)
+2026-07-24T01:13:25.457Z ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:25.457Z File "/usr/local/lib/python3.11/site-packages/django/middleware/security.py", line 28, in process_request
+2026-07-24T01:13:25.457Z host = self.redirect_host or request.get_host()
+2026-07-24T01:13:25.457Z ^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:25.457Z File "/usr/local/lib/python3.11/site-packages/django/http/request.py", line 151, in get_host
+2026-07-24T01:13:25.457Z raise DisallowedHost(msg)
+2026-07-24T01:13:25.457Z django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:25.458Z WARNING 2026-07-24 01:13:25,458 log Bad Request: /api/health/
+2026-07-24T01:13:25.458Z 127.0.0.1 - - [24/Jul/2026:01:13:25 +0000] "GET /api/health/ HTTP/1.0" 400 143 "-" "curl/8.14.1"
+2026-07-24T01:13:30.547Z ERROR 2026-07-24 01:13:30,546 exception Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:30.547Z Traceback (most recent call last):
+2026-07-24T01:13:30.547Z File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+2026-07-24T01:13:30.547Z response = get_response(request)
+2026-07-24T01:13:30.547Z ^^^^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:30.547Z File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 133, in __call__
+2026-07-24T01:13:30.547Z response = self.process_request(request)
+2026-07-24T01:13:30.547Z ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:30.547Z File "/usr/local/lib/python3.11/site-packages/django/middleware/security.py", line 28, in process_request
+2026-07-24T01:13:30.547Z host = self.redirect_host or request.get_host()
+2026-07-24T01:13:30.547Z ^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:30.547Z File "/usr/local/lib/python3.11/site-packages/django/http/request.py", line 151, in get_host
+2026-07-24T01:13:30.547Z raise DisallowedHost(msg)
+2026-07-24T01:13:30.547Z django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:30.548Z 127.0.0.1 - - [24/Jul/2026:01:13:30 +0000] "GET /api/health/ HTTP/1.0" 400 143 "-" "curl/8.14.1"
+2026-07-24T01:13:30.549Z WARNING 2026-07-24 01:13:30,548 log Bad Request: /api/health/
+2026-07-24T01:13:35.621Z ERROR 2026-07-24 01:13:35,620 exception Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:35.622Z Traceback (most recent call last):
+2026-07-24T01:13:35.622Z File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+2026-07-24T01:13:35.622Z response = get_response(request)
+2026-07-24T01:13:35.622Z ^^^^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:35.622Z File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 133, in __call__
+2026-07-24T01:13:35.622Z response = self.process_request(request)
+2026-07-24T01:13:35.622Z ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:35.622Z File "/usr/local/lib/python3.11/site-packages/django/middleware/security.py", line 28, in process_request
+2026-07-24T01:13:35.622Z host = self.redirect_host or request.get_host()
+2026-07-24T01:13:35.622Z ^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:35.622Z File "/usr/local/lib/python3.11/site-packages/django/http/request.py", line 151, in get_host
+2026-07-24T01:13:35.622Z raise DisallowedHost(msg)
+2026-07-24T01:13:35.622Z django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:35.622Z WARNING 2026-07-24 01:13:35,621 log Bad Request: /api/health/
+2026-07-24T01:13:35.623Z 127.0.0.1 - - [24/Jul/2026:01:13:35 +0000] "GET /api/health/ HTTP/1.0" 400 143 "-" "curl/8.14.1"
+2026-07-24T01:13:40.706Z ERROR 2026-07-24 01:13:40,706 exception Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:40.706Z Traceback (most recent call last):
+2026-07-24T01:13:40.706Z File "/usr/local/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+2026-07-24T01:13:40.706Z response = get_response(request)
+2026-07-24T01:13:40.706Z ^^^^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:40.706Z File "/usr/local/lib/python3.11/site-packages/django/utils/deprecation.py", line 133, in __call__
+2026-07-24T01:13:40.706Z response = self.process_request(request)
+2026-07-24T01:13:40.706Z ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:40.706Z File "/usr/local/lib/python3.11/site-packages/django/middleware/security.py", line 28, in process_request
+2026-07-24T01:13:40.706Z host = self.redirect_host or request.get_host()
+2026-07-24T01:13:40.706Z ^^^^^^^^^^^^^^^^^^
+2026-07-24T01:13:40.706Z File "/usr/local/lib/python3.11/site-packages/django/http/request.py", line 151, in get_host
+2026-07-24T01:13:40.706Z raise DisallowedHost(msg)
+2026-07-24T01:13:40.706Z django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost'. You may need to add 'localhost' to ALLOWED_HOSTS.
+2026-07-24T01:13:40.708Z WARNING 2026-07-24 01:13:40,707 log Bad Request: /api/health/
+2026-07-24T01:13:40.708Z 127.0.0.1 - - [24/Jul/2026:01:13:40 +0000] "GET /api/health/ HTTP/1.0" 400 143 "-" "curl/8.14.1"

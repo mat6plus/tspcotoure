@@ -120,6 +120,7 @@ if not DEBUG:
     CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://tspcouture.com,https://www.tspcouture.com,https://admin.tspcouture.com').split(',')
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     USE_X_FORWARDED_HOST = True
+    USE_X_FORWARDED_PORT = True
 else:
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
