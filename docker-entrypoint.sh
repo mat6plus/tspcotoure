@@ -5,7 +5,7 @@ cd /app/backend
 
 if [ "$DB_ENGINE" = "django.db.backends.postgresql" ]; then
     echo "Waiting for PostgreSQL..."
-    while ! python -c "import psycopg2; psycopg2.connect(host=$DB_HOST, user=$DB_USER, password=$DB_PASSWORD, dbname=$DB_NAME)" 2>/dev/null; do
+    while ! python -c "import psycopg2; psycopg2.connect(host='$DB_HOST', user='$DB_USER', password='$DB_PASSWORD', dbname='$DB_NAME')" 2>/dev/null; do
         sleep 1
     done
     echo "PostgreSQL is ready"
