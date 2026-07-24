@@ -16,4 +16,4 @@ python manage.py migrate --noinput
 
 echo "Starting services..."
 nginx
-exec gunicorn config.wsgi:application --bind 127.0.0.1:8000 --workers 2 --access-logfile - --error-logfile -
+exec gunicorn config.wsgi:application --bind 127.0.0.1:8001 --workers 2 --access-logfile - --error-logfile -
