@@ -94,6 +94,10 @@ DEVELOPER_README.md
 m.md
 .env.example
 
+# Misc / logs / screenshots
+error.md
+Screenshot*.png
+
 # Misc
 *.bak
 *.tmp
